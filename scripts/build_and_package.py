@@ -60,7 +60,7 @@ def build_libraries(build_type, ubuntu_release, jobs, use_goma):
         "-j%d" % jobs,
         "-C",
         build_dir,
-        "third_party/instrumented_libraries/%s:locally_built" % ubuntu_release,
+        "third_party/instrumented_libs/%s:locally_built" % ubuntu_release,
     ])
     release = _get_release()
     name = '%s-%s-lib' % (build_type, release)

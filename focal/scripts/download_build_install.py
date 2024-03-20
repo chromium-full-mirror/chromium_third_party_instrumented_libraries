@@ -205,7 +205,7 @@ class InstrumentedPackageBuilder(object):
             self.build_and_install()
         except Exception as exception:
             print("ERROR: Failed to build package %s. Have you "
-                  "run src/third_party/instrumented_libraries/scripts/"
+                  "run src/third_party/instrumented_libs/scripts/"
                   "install-build-deps.sh?" % self._package)
             raise
 

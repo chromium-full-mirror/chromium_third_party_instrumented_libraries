@@ -10,7 +10,7 @@ declare_args() {
 
 group("deps") {
   if (use_locally_built_instrumented_libraries) {
-    deps = [ "//third_party/instrumented_libraries/$instrumented_libraries_release:locally_built" ]
+    deps = [ "//third_party/instrumented_libs/$instrumented_libraries_release:locally_built" ]
   } else if (use_prebuilt_instrumented_libraries) {
     assert(prebuilt_instrumented_libraries_available,
            "Prebuilt instrumented libraries are only available when " +
