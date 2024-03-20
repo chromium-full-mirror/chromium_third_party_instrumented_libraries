@@ -1,2 +1,4 @@
 # Ignore downloaded binaries.
-*.tgz
+*-lib
+*-lib.tar
+*-lib.tar.gz

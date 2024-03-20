@@ -4,6 +4,12 @@
 # found in the LICENSE file.
 """Unpacks pre-built sanitizer-instrumented third-party libraries."""
 
+# TODO(https://crbug.com/320564950): This should be removed since the
+# binaries are extracted when running gclient hooks.  This requires:
+# 1. Update MSAN RPATHs to point to the new extracted location.
+# 2. Update mb.py to pack the appropriate prebuilt libraries
+#    for swarming.
+
 import os
 import subprocess
 import shutil
@@ -11,20 +17,14 @@ import sys
 
 
 def get_archive_name(archive_prefix, release):
-    return "%s-%s.tgz" % (archive_prefix, release)
+    return "%s-%s-lib" % (archive_prefix, release)
 
 
 def main(archive_prefix, release, archive_dir, target_dir, stamp_dir=None):
     shutil.rmtree(target_dir, ignore_errors=True)
 
-    os.mkdir(target_dir)
-    subprocess.check_call([
-        "tar",
-        "-zxf",
-        os.path.join(archive_dir, get_archive_name(archive_prefix, release)),
-        "-C",
-        target_dir,
-    ])
+    name = get_archive_name(archive_prefix, release)
+    shutil.copy(os.path.join(archive_dir, name), target_dir)
     stamp_file = os.path.join(stamp_dir or target_dir,
                               "%s.txt" % archive_prefix)
     open(stamp_file, "w").close()

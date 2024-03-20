@@ -62,15 +62,17 @@ def build_libraries(build_type, ubuntu_release, jobs, use_goma):
         build_dir,
         "third_party/instrumented_libraries/%s:locally_built" % ubuntu_release,
     ])
-    with tarfile.open("%s.tgz" % build_type, mode="w:gz") as f:
+    release = _get_release()
+    name = '%s-%s-lib' % (build_type, release)
+    with tarfile.open("%s.tar.gz" % name, mode="w:gz") as f:
         f.add(
             "%s/instrumented_libraries/lib" % build_dir,
-            arcname="lib",
+            arcname=name + "/lib",
             filter=_tar_filter,
         )
         f.add(
             "%s/instrumented_libraries/sources" % build_dir,
-            arcname="sources",
+            arcname=name + "/sources",
             filter=_tar_filter,
         )
 
