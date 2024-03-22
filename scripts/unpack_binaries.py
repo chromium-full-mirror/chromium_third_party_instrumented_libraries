@@ -11,7 +11,6 @@
 #    for swarming.
 
 import os
-import subprocess
 import shutil
 import sys
 
@@ -24,7 +23,7 @@ def main(archive_prefix, release, archive_dir, target_dir, stamp_dir=None):
     shutil.rmtree(target_dir, ignore_errors=True)
 
     name = get_archive_name(archive_prefix, release)
-    shutil.copy(os.path.join(archive_dir, name), target_dir)
+    shutil.copytree(os.path.join(archive_dir, name), target_dir, symlinks=True)
     stamp_file = os.path.join(stamp_dir or target_dir,
                               "%s.txt" % archive_prefix)
     open(stamp_file, "w").close()
