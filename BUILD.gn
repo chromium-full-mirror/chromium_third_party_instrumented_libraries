@@ -8,6 +8,14 @@ declare_args() {
   instrumented_libraries_release = "focal"
 }
 
+if (prebuilt_instrumented_libraries_available) {
+  if (msan_track_origins == 0) {
+    archive = "msan-no-origins-$instrumented_libraries_release-lib"
+  } else if (msan_track_origins == 2) {
+    archive = "msan-chained-origins-$instrumented_libraries_release-lib"
+  }
+}
+
 group("deps") {
   if (use_locally_built_instrumented_libraries) {
     deps = [ "//third_party/instrumented_libs/$instrumented_libraries_release:locally_built" ]
@@ -15,47 +23,16 @@ group("deps") {
     assert(prebuilt_instrumented_libraries_available,
            "Prebuilt instrumented libraries are only available when " +
                "is_msan = true and msan_track_origins = {0, 2}")
-    deps = [ ":prebuilt" ]
-    data_deps = [ ":prebuilt" ]
+    data = [ "//third_party/instrumented_libs/binaries/$archive/lib" ]
   }
 }
 
 if (prebuilt_instrumented_libraries_available) {
-  group("prebuilt") {
-    visibility = [ ":deps" ]
-
-    deps = [ ":extract_prebuilt_instrumented_libraries" ]
-    data_deps = [ ":extract_prebuilt_instrumented_libraries" ]
-  }
-
-  if (msan_track_origins == 0) {
-    archive_prefix = "msan-no-origins"
-  } else if (msan_track_origins == 2) {
-    archive_prefix = "msan-chained-origins"
-  }
-
-  # Note: This requires a clobber whenever Ubuntu version changes.
-  action("extract_prebuilt_instrumented_libraries") {
-    visibility = [ ":prebuilt" ]
-    script = "scripts/unpack_binaries.py"
-    depfile = "$target_out_dir/$archive_prefix.d"
-    args = [
-      archive_prefix,
-      instrumented_libraries_release,
-      rebase_path("binaries", root_build_dir),
-      rebase_path(root_out_dir + "/instrumented_libraries_prebuilt",
-                  root_build_dir),
-      rebase_path(target_out_dir, root_out_dir),
-    ]
-    outputs = [ "$target_out_dir/$archive_prefix.txt" ]
-    data = [ "$root_out_dir/instrumented_libraries_prebuilt/" ]
-  }
-
   config("prebuilt_ldflags") {
     ldflags = [
       # Add a relative RPATH entry to Chromium binaries. This puts instrumented
       # DSOs before system-installed versions in library search path.
-      "-Wl,-R,\$ORIGIN/instrumented_libraries_prebuilt/lib",
+      "-Wl,-R,\$ORIGIN/../../third_party/instrumented_libs/binaries/$archive/lib",
       "-Wl,-z,origin",
 
       # Add some padding to allow RPATHs to be modified later.
