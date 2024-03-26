@@ -21,6 +21,12 @@ BUILD_TYPES = {
     ],
 }
 
+IGNORED_SUFFIXES = [
+    ".txt",
+    # Skip a missing symlink.
+    "99-environment.conf",
+]
+
 
 class Error(Exception):
     pass
@@ -36,7 +42,7 @@ def _get_release():
 
 
 def _tar_filter(tar_info):
-    if tar_info.name.endswith(".txt"):
+    if any(tar_info.name.endswith(suffix) for suffix in IGNORED_SUFFIXES):
         return None
     return tar_info
 
