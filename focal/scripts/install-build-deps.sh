@@ -51,7 +51,6 @@ libgpg-error \
 libidn \
 libindicator \
 libjpeg-turbo \
-libldap-2.4-2 \
 libmicrohttpd \
 libpng1.6 \
 libsasl2-2 \
@@ -88,4 +87,21 @@ systemd \
 wayland \
 zlib"
 
+# Unfortunately, the libraries we instrument depend on two conflicting Kerberos
+# implementations. libldap-2.4-2 (openldap) depends on Heimdal, but all the
+# other libraries that require Kerberos depend on the MIT implementation
+# instead. If the script tries to install all the build dependencies in a
+# single apt invocation, apt about unmet dependencies due to conflicting
+# packages.
+#
+# However, the MIT implementation and Heimdal present largely identical API
+# surfaces to clients, and libldap-2.4-2 appears to work when built against the
+# MIT implementation.
+#
+# Take advantage of this by installing the build dependencies in two stages.
+# First, install just libldap's build deps, which installs the Heimdal build
+# dependency as well...
+sudo apt-get build-dep -y libldap-2.4-2
+# Then install all the remaining build dependencies. Since this requests the MIT
+# Kerberos implementation, apt replaces Heimdal with the MIT implementation.
 sudo apt-get build-dep -y $packages
