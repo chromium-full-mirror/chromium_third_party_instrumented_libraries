@@ -47,14 +47,14 @@ def _tar_filter(tar_info):
     return tar_info
 
 
-def build_libraries(build_type, ubuntu_release, jobs, use_goma):
+def build_libraries(build_type, ubuntu_release, jobs, use_remoteexec):
     build_dir = "out/Instrumented-%s" % build_type
     if not os.path.exists(build_dir):
         os.makedirs(build_dir)
 
     gn_args = [
         "is_debug = false",
-        "use_goma = %s" % str(use_goma).lower(),
+        "use_remoteexec = %s" % str(use_remoteexec).lower(),
         "use_locally_built_instrumented_libraries = true",
         'instrumented_libraries_release = "%s"' % ubuntu_release,
     ] + BUILD_TYPES[build_type]
@@ -101,7 +101,7 @@ def main():
         help="whether to run all instrumented builds in parallel",
     )
     parser.add_argument(
-        "--use_goma",
+        "--use_remoteexec",
         action="store_true",
         default=False,
         help="whether to use goma to compile",
@@ -129,7 +129,7 @@ def main():
         for build_type in build_types:
             proc = multiprocessing.Process(
                 target=build_libraries,
-                args=(build_type, args.release, args.jobs, args.use_goma),
+                args=(build_type, args.release, args.jobs, args.use_remoteexec),
             )
             proc.start()
             procs.append(proc)
@@ -137,7 +137,7 @@ def main():
             proc.join()
     else:
         for build_type in build_types:
-            build_libraries(build_type, args.release, args.jobs, args.use_goma)
+            build_libraries(build_type, args.release, args.jobs, args.use_remoteexec)
     print("To upload, run:")
     for build_type in build_types:
         print("upload_to_google_storage.py -b "
