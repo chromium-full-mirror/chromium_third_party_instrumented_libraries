@@ -427,7 +427,7 @@ class Libpci3Builder(InstrumentedPackageBuilder):
     def package_version(self):
         """Guesses libpci3 version from source directory name."""
         dir_name = os.path.split(os.path.normpath(self._source_dir))[-1]
-        match = re.match("pciutils-(\d+\.\d+\.\d+)", dir_name)
+        match = re.match(r"pciutils-(\d+\.\d+\.\d+)", dir_name)
         if match is None:
             raise Exception(
                 "Unable to guess libpci3 version from directory name: %s" %
