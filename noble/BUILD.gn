@@ -11,7 +11,7 @@ group("locally_built") {
   # TODO(https://crbug.com/333609800): Fix and enable all packages in deps.
   deps = [
     ":at-spi2-core",
-    # ":brltty",
+    ":brltty",
     ":dee",
     ":freetype",
     ":guest-oslogin",
@@ -201,6 +201,12 @@ instrumented_library("brltty") {
     "--disable-python-bindings",
     "--disable-tcl-bindings",
   ]
+
+  # Ignore MSAN errors during the build.
+  env = [ [
+        "MSAN_OPTIONS",
+        "halt_on_error=0 exitcode=0",
+      ] ]
 }
 
 instrumented_library("dee") {
