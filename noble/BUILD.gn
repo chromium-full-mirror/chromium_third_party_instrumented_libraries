@@ -10,7 +10,7 @@ group("locally_built") {
   visibility = [ "//third_party/instrumented_libs:deps" ]
   # TODO(https://crbug.com/333609800): Fix and enable all packages in deps.
   deps = [
-    # ":atk1.0",
+    ":at-spi2-core",
     # ":brltty",
     ":dee",
     ":freetype",
@@ -177,9 +177,9 @@ template("instrumented_library") {
   }
 }
 
-instrumented_library("atk1.0") {
+instrumented_library("at-spi2-core") {
   build_method = "meson"
-  extra_configure_flags = [ "-Dintrospection=false" ]
+  extra_configure_flags = [ "-Dintrospection=disabled" ]
 }
 
 instrumented_library("brltty") {
