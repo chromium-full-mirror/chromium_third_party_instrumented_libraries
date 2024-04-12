@@ -17,7 +17,6 @@ group("locally_built") {
     ":guest-oslogin",
     ":harfbuzz",
     ":libappindicator3-1",
-    # ":libasound2",
     # ":libatk-bridge2.0-0",
     # ":libatspi2.0-0",
     # ":libavahi-client3",
@@ -46,6 +45,7 @@ group("locally_built") {
     # ":libldap-2.4-2",
     ":libnettle7",
     # ":libnspr4",
+    ":liboss4-salsa-asound2",
     ":libp11-kit0",
     # ":libpci3",
     ":libpcre3",
@@ -255,11 +255,6 @@ instrumented_library("libappindicator3-1") {
     "--with-gtk=3",
   ]
   pre_build = "scripts/pre-build/autogen.sh"
-}
-
-instrumented_library("libasound2") {
-  extra_configure_flags = [ "--disable-static" ]
-  pre_build = "scripts/pre-build/libasound2.sh"
 }
 
 instrumented_library("libatk-bridge2.0-0") {
@@ -603,6 +598,11 @@ instrumented_library("libnspr4") {
     "--disable-debug",
   ]
   pre_build = "scripts/pre-build/libnspr4.sh"
+}
+
+instrumented_library("liboss4-salsa-asound2") {
+  build_method = "debian"
+  patches = [ "patches/liboss4-salsa-asound2.patch" ]
 }
 
 instrumented_library("libnettle7") {

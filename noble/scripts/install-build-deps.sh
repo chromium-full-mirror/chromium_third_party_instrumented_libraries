@@ -43,6 +43,7 @@ libidn \
 libindicator \
 libjpeg-turbo \
 libmicrohttpd \
+liboss4-salsa-asound2 \
 libpng1.6 \
 libunity \
 libx11 \
