@@ -17,7 +17,7 @@ group("locally_built") {
     ":guest-oslogin",
     ":harfbuzz",
     ":libappindicator3-1",
-    # ":libatk-bridge2.0-0",
+    ":libatk-bridge2.0-0t64",
     # ":libatspi2.0-0",
     # ":libavahi-client3",
     # ":libcairo2",
@@ -257,8 +257,11 @@ instrumented_library("libappindicator3-1") {
   pre_build = "scripts/pre-build/autogen.sh"
 }
 
-instrumented_library("libatk-bridge2.0-0") {
+instrumented_library("libatk-bridge2.0-0t64") {
   build_method = "meson"
+  extra_configure_flags = [
+    "-Dintrospection=disabled",
+  ]
 }
 
 instrumented_library("libatspi2.0-0") {
