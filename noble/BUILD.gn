@@ -18,7 +18,7 @@ group("locally_built") {
     ":harfbuzz",
     ":libappindicator3-1",
     ":libatk-bridge2.0-0t64",
-    # ":libatspi2.0-0",
+    ":libatspi2.0-0t64",
     # ":libavahi-client3",
     # ":libcairo2",
     ":libcap2",
@@ -264,9 +264,9 @@ instrumented_library("libatk-bridge2.0-0t64") {
   ]
 }
 
-instrumented_library("libatspi2.0-0") {
+instrumented_library("libatspi2.0-0t64") {
   build_method = "meson"
-  extra_configure_flags = [ "-Dintrospection=no" ]
+  extra_configure_flags = [ "-Dintrospection=disabled" ]
   package_cflags = [
     "-Wno-incompatible-function-pointer-types",
     "-Wno-implicit-function-declaration",
