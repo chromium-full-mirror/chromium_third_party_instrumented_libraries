@@ -19,7 +19,7 @@ group("locally_built") {
     ":libappindicator3-1",
     ":libatk-bridge2.0-0t64",
     ":libatspi2.0-0t64",
-    # ":libavahi-client3",
+    ":libavahi-client3",
     # ":libcairo2",
     ":libcap2",
     ":libcredentialkit_pkcs11",
@@ -281,10 +281,14 @@ instrumented_library("libavahi-client3") {
 
     # From debian/rules.
     "--enable-compat-libdns_sd",
+    "--disable-libevent",
     "--disable-mono",
     "--disable-monodoc",
     "--disable-qt3",
     "--disable-qt4",
+    "--disable-qt5",
+    "--disable-pygobject",
+    "--disable-python-dbus",
     "--with-systemdsystemunitdir=/lib/systemd/system",
   ]
   patches = [ "patches/libavahi-client3.diff" ]
