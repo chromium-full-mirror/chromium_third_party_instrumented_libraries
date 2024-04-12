@@ -20,7 +20,7 @@ group("locally_built") {
     ":libatk-bridge2.0-0t64",
     ":libatspi2.0-0t64",
     ":libavahi-client3",
-    # ":libcairo2",
+    ":libcairo2",
     ":libcap2",
     ":libcredentialkit_pkcs11",
     # ":libcups2",
@@ -296,13 +296,7 @@ instrumented_library("libavahi-client3") {
 }
 
 instrumented_library("libcairo2") {
-  extra_configure_flags = [
-    "--disable-gtk-doc",
-    "--disable-static",
-  ]
-
-  # Required due to aclocal version mismatch.
-  pre_build = "scripts/pre-build/autoreconf.sh"
+  build_method = "meson"
 }
 
 instrumented_library("libcap2") {
