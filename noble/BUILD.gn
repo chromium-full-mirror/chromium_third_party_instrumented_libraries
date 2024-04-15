@@ -29,7 +29,7 @@ group("locally_built") {
     ":libdbus-glib-1-2",
     ":libdbusmenu",
     ":libdbusmenu-glib4",
-    # ":libexpat1",
+    ":libexpat1",
     # ":libffi7",
     ":libfontconfig1",
     ":libgcrypt20",
@@ -114,7 +114,7 @@ template("instrumented_library") {
       "-fsanitize=memory",
       "-fsanitize-memory-track-origins=${msan_track_origins}",
     ]
-    package_ldflags = [ "-fsanitize=memory" ]
+    package_ldflags = [ "-fsanitize=memory", "-fuse-ld=lld" ]
     if (defined(invoker.package_cflags)) {
       package_cflags += invoker.package_cflags
     }
@@ -422,7 +422,6 @@ instrumented_library("libexpat1") {
   build_method = "debian"
   patches = [
     "patches/libexpat1.diff",
-    "patches/libexpat1.2.diff",
   ]
 }
 
