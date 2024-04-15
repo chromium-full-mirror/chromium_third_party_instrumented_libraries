@@ -12,6 +12,7 @@ group("locally_built") {
   deps = [
     ":at-spi2-core",
     ":brltty",
+    ":cups",
     ":dee",
     ":freetype",
     ":guest-oslogin",
@@ -23,7 +24,6 @@ group("locally_built") {
     ":libcairo2",
     ":libcap2",
     ":libcredentialkit_pkcs11",
-    # ":libcups2",
     # ":libcurl3-gnutls",
     ":libdbus-1-3",
     ":libdbus-glib-1-2",
@@ -209,6 +209,49 @@ instrumented_library("brltty") {
       ] ]
 }
 
+instrumented_library("cups") {
+  extra_configure_flags = [
+    "--disable-static",
+
+    # All from debian/rules.
+    "--with-docdir=/usr/share/cups/doc-root",
+    "--with-pkgconfpath=/usr/lib/x86_64-linux-gnu/pkgconfig",
+    "--localedir=/usr/share/cups/locale",
+    "--enable-libpaper",
+    "--enable-ssl",
+    "--with-tls=gnutls",
+    "--enable-threads",
+    "--enable-static",
+    "--enable-debug",
+    "--enable-dbus",
+    "--with-dbusdir=/etc/dbus-1",
+    "--enable-avahi",
+    "--disable-launchd",
+    "--with-cups-group=lp",
+    "--with-rundir=/run/cups",
+    "--with-printcap=/run/cups/printcap",
+    "--with-log-file-perm=0640",
+    "--with-local_protocols='dnssd'",
+    "--with-systemd=/lib/systemd/system",
+    "--with-system-groups=lpadmin",
+    "--with-error-policy=retry-job",
+    "--enable-sync-on-close",
+    "--with-max-log-size=0",
+    "--enable-snapped-clients",
+
+    # Enabling gssapi also enables LTO, which would change the linker
+    # to gold instead of LLD.
+    "--disable-gssapi",
+  ]
+  pre_build = "scripts/pre-build/libcups2.sh"
+
+  # Ignore MSAN errors during the build.
+  env = [ [
+        "MSAN_OPTIONS",
+        "halt_on_error=0 exitcode=0",
+      ] ]
+}
+
 instrumented_library("dee") {
   extra_configure_flags = [
     "--disable-static",
@@ -306,36 +349,6 @@ instrumented_library("libcap2") {
 
 instrumented_library("libcredentialkit_pkcs11") {
   build_method = "stub"
-}
-
-instrumented_library("libcups2") {
-  extra_configure_flags = [
-    "--disable-static",
-
-    # All from debian/rules.
-    "--localedir=/usr/share/cups/locale",
-    "--enable-slp",
-    "--enable-libpaper",
-    "--enable-ssl",
-    "--enable-gnutls",
-    "--disable-openssl",
-    "--enable-threads",
-    "--enable-debug",
-    "--enable-dbus",
-    "--with-dbusdir=/etc/dbus-1",
-    "--enable-gssapi",
-    "--enable-avahi",
-    "--with-pdftops=/usr/bin/gs",
-    "--disable-launchd",
-    "--with-cups-group=lp",
-    "--with-system-groups=lpadmin",
-    "--with-printcap=/var/run/cups/printcap",
-    "--with-log-file-perm=0640",
-    "--with-local_protocols=\"CUPS dnssd\"",
-    "--with-remote_protocols=\"CUPS dnssd\"",
-    "--enable-libusb",
-  ]
-  pre_build = "scripts/pre-build/libcups2.sh"
 }
 
 instrumented_library("libcurl3-gnutls") {
