@@ -34,7 +34,7 @@ group("locally_built") {
     ":libfontconfig1",
     ":libgcrypt20",
     ":libgdk-pixbuf2.0-0",
-    # ":libglib2.0-0",
+    ":libglib2.0-0",
     # ":libgnutls30",
     ":libgpg-error0",
     # ":libgtk-3-0",
@@ -461,12 +461,18 @@ instrumented_library("libgdk-pixbuf2.0-0") {
 instrumented_library("libglib2.0-0") {
   build_method = "meson"
   extra_configure_flags = [
-    "-Dgdk_doc=false",
+    "-Dgtk_doc=false",
     "-Dman=false",
   ]
   msan_ignorelist = "ignorelists/msan/libglib2.0-0.txt"
   pre_build = "scripts/pre-build/libglib2.0-0.sh"
   package_cflags = [ "-Wno-int-conversion" ]
+
+  # Ignore MSAN errors during the build.
+  env = [ [
+        "MSAN_OPTIONS",
+        "halt_on_error=0 exitcode=0",
+      ] ]
 }
 
 instrumented_library("libgnutls30") {
