@@ -24,7 +24,7 @@ group("locally_built") {
     ":libcairo2",
     ":libcap2",
     ":libcredentialkit_pkcs11",
-    # ":libcurl3-gnutls",
+    ":libcurl3t64-gnutls",
     ":libdbus-1-3",
     ":libdbus-glib-1-2",
     ":libdbusmenu",
@@ -351,11 +351,14 @@ instrumented_library("libcredentialkit_pkcs11") {
   build_method = "stub"
 }
 
-instrumented_library("libcurl3-gnutls") {
+instrumented_library("libcurl3t64-gnutls") {
   build_method = "custom_libcurl"
 
   # Don't generate zsh or fish completions.
-  patches = [ "patches/libcurl3-gnutls.diff" ]
+  patches = [
+    "patches/libcurl3-gnutls.diff",
+    "patches/libcurl3-gnutls.1.diff",
+  ]
 }
 
 instrumented_library("libdbus-1-3") {
