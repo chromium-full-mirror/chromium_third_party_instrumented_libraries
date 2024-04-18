@@ -37,7 +37,7 @@ group("locally_built") {
     ":libglib2.0-0",
     ":libgnutls30t64",
     ":libgpg-error0",
-    # ":libgtk-3-0",
+    ":libgtk-3-0t64",
     # ":libidn11",
     ":libido3-0.1-0",
     ":libindicator3-7",
@@ -513,21 +513,18 @@ instrumented_library("libgpg-error0") {
   extra_configure_flags = [ "--disable-static" ]
 }
 
-instrumented_library("libgtk-3-0") {
-  package_cflags = [
-    "-Wno-implicit-function-declaration",
-    "-Wno-int-conversion",
-    "-Wno-return-type",
-  ]
-  extra_configure_flags = [
-    "--disable-static",
-    "--disable-introspection",
+instrumented_library("libgtk-3-0t64") {
+  build_method = "meson"
 
-    # From debian/rules.
-    "--enable-test-print-backend",
-    "--enable-x11-backend",
+  extra_configure_flags = [
+    "-Dintrospection=false",
+    "-Ddemos=false",
+    "-Dexamples=false",
+    "-Dtests=false",
   ]
-  pre_build = "scripts/pre-build/libgtk-3-0.sh"
+  package_cflags = [
+    "-Wno-int-conversion",
+  ]
   patches = [
     # MSAN does not support GL, so it must be disabled in GTK.
     # https://www.chromium.org/developers/testing/memorysanitizer#TOC-Disable-OpenGL
