@@ -35,7 +35,7 @@ group("locally_built") {
     ":libgcrypt20",
     ":libgdk-pixbuf2.0-0",
     ":libglib2.0-0",
-    # ":libgnutls30",
+    ":libgnutls30t64",
     ":libgpg-error0",
     # ":libgtk-3-0",
     # ":libidn11",
@@ -478,7 +478,7 @@ instrumented_library("libglib2.0-0") {
       ] ]
 }
 
-instrumented_library("libgnutls30") {
+instrumented_library("libgnutls30t64") {
   extra_configure_flags = [
     # from debian/rules.
     "--enable-ld-version-script",
@@ -502,6 +502,10 @@ instrumented_library("libgnutls30") {
     # memory is contained within libgnutls, so will not affect Chromium test
     # coverage.
     "patches/libgnutls30.2.diff",
+
+    # Remove symbols from the version script that aren't compiled with
+    # hardware acceleration disabled.
+    "patches/libgnutls30.3.diff",
   ]
 }
 
