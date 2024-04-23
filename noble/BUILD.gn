@@ -38,7 +38,7 @@ group("locally_built") {
     ":libgnutls30t64",
     ":libgpg-error0",
     ":libgtk-3-0t64",
-    # ":libidn11",
+    ":libidn12",
     ":libido3-0.1-0",
     ":libindicator3-7",
     ":libjpeg-turbo8",
@@ -545,9 +545,10 @@ instrumented_library("libido3-0.1-0") {
   pre_build = "scripts/pre-build/autogen.sh"
 }
 
-instrumented_library("libidn11") {
+instrumented_library("libidn12") {
   build_method = "debian"
   pre_build = "scripts/pre-build/libidn.sh"
+  patches = [ "patches/libidn12.diff" ]
 }
 
 instrumented_library("libindicator3-7") {

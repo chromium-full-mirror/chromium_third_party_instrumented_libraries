@@ -10,5 +10,5 @@ sed -i "s/-no-undefined//g" ./lib/gl/Makefile.am
 sed -i "s/-no-undefined//g" ./lib/Makefile.am
 sed -i "s/-Wl,-z,defs//g" ./debian/rules
 
-# Do not run tests.
-sed -i "s/$(MAKE) check//g" ./debian/rules
+# Ignore symbol differences.
+rm ./debian/libidn12.symbols
