@@ -42,6 +42,7 @@ libgpg-error \
 libidn \
 libindicator \
 libjpeg-turbo \
+libldap2 \
 libmicrohttpd \
 liboss4-salsa-asound2 \
 libpng1.6 \
