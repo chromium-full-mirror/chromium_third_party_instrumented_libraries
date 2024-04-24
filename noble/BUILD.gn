@@ -53,7 +53,7 @@ group("locally_built") {
     ":libpng16-16t64",
     ":librtmp1",
     ":libsasl2-2",
-    # ":libsecret",
+    ":libsecret",
     # ":libssl1.1",
     ":libtasn1-6",
     # ":libudev1",
@@ -674,13 +674,14 @@ instrumented_library("libsasl2-2") {
 }
 
 instrumented_library("libsecret") {
-  extra_configure_flags = [
-    "--disable-static",
+  build_method = "meson"
 
-    # See above.
-    "--disable-introspection",
+
+  extra_configure_flags = [
+    "-Dmanpage=false",
+    "-Dgtk_doc=false",
+    "-Dintrospection=false",
   ]
-  pre_build = "scripts/pre-build/autoreconf.sh"
 }
 
 instrumented_library("libssl1.1") {
