@@ -44,7 +44,7 @@ group("locally_built") {
     ":libjpeg-turbo8",
     ":libldap2",
     ":libnettle7",
-    # ":libnspr4",
+    ":libnspr4",
     ":liboss4-salsa-asound2",
     ":libp11-kit0",
     # ":libpci3",
@@ -605,6 +605,8 @@ instrumented_library("libnspr4") {
     "--disable-debug",
   ]
   pre_build = "scripts/pre-build/libnspr4.sh"
+
+  patches = [ "patches/libnspr4.diff" ]
 }
 
 instrumented_library("liboss4-salsa-asound2") {
