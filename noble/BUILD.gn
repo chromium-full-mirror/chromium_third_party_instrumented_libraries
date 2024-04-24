@@ -52,7 +52,7 @@ group("locally_built") {
     ":libpixman-1-0",
     ":libpng16-16t64",
     ":librtmp1",
-    # ":libsasl2-2",
+    ":libsasl2-2",
     # ":libsecret",
     # ":libssl1.1",
     ":libtasn1-6",
@@ -669,6 +669,7 @@ instrumented_library("libsasl2-2") {
   package_cflags = [
     "-Wno-implicit-function-declaration",
     "-Wno-return-type",
+    "-Wno-incompatible-function-pointer-types",
   ]
 }
 

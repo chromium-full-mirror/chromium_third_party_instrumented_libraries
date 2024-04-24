@@ -7,8 +7,3 @@
 
 # Do not warn about undefined sanitizer symbols in object files.
 sed -i "s/-Wl,-z,defs//g" ./debian/rules
-
-# Do not build the sample server/client.
-sed -i "s/.*sample.*//g" ./debian/rules
-
-
