@@ -47,7 +47,7 @@ group("locally_built") {
     ":libnspr4",
     ":liboss4-salsa-asound2",
     ":libp11-kit0",
-    # ":libpci3",
+    ":libpci3",
     ":libpcre3",
     ":libpixman-1-0",
     # ":libpng16-16",
