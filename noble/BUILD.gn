@@ -51,7 +51,7 @@ group("locally_built") {
     ":libpcre3",
     ":libpixman-1-0",
     ":libpng16-16t64",
-    # ":librtmp1",
+    ":librtmp1",
     # ":libsasl2-2",
     # ":libsecret",
     # ":libssl1.1",
