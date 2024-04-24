@@ -54,7 +54,7 @@ group("locally_built") {
     ":librtmp1",
     ":libsasl2-2",
     ":libsecret",
-    # ":libssl1.1",
+    ":libssl3t64",
     ":libtasn1-6",
     # ":libudev1",
     ":libunity9",
@@ -684,11 +684,10 @@ instrumented_library("libsecret") {
   ]
 }
 
-instrumented_library("libssl1.1") {
+instrumented_library("libssl3t64") {
   build_method = "debian"
   patches = [
-    "patches/libssl1.1.diff",
-    "patches/libssl1.1-2.diff",
+    "patches/libssl3t64.diff",
   ]
 }
 
