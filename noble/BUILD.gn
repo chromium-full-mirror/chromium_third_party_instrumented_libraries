@@ -56,7 +56,7 @@ group("locally_built") {
     ":libsecret",
     ":libssl3t64",
     ":libtasn1-6",
-    # ":libudev1",
+    ":libudev1",
     ":libunity9",
     ":libva2",
     # ":libwayland-client0",
@@ -869,6 +869,10 @@ instrumented_library("pulseaudio") {
 
 instrumented_library("libudev1") {
   build_method = "meson"
+  extra_configure_flags = [
+    "-Defi=false",
+    "-Ddbus-interfaces-dir=no",
+  ]
 }
 
 instrumented_library("zlib1g") {
