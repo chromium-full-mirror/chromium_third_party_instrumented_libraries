@@ -59,7 +59,7 @@ group("locally_built") {
     ":libudev1",
     ":libunity9",
     ":libva2",
-    # ":libwayland-client0",
+    ":libwayland-client0",
     ":libx11-6",
     ":libxau6",
     # ":libxcb1",
@@ -720,14 +720,13 @@ instrumented_library("libva2") {
 }
 
 instrumented_library("libwayland-client0") {
+  build_method = "meson"
   extra_configure_flags = [
-    "--disable-static",
-    "--disable-documentation",
+    "-Ddocumentation=false",
+    "-Ddtd_validation=false",
+    "-Dscanner=false",
+    "-Dtests=false",
   ]
-
-  # Do not use the just-built wayland_scanner because it is not runnable due
-  # to uninstrumented dependencies.
-  extra_configure_flags += [ "--with-host-scanner" ]
 }
 
 instrumented_library("libx11-6") {
