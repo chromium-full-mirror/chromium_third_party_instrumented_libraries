@@ -76,7 +76,7 @@ group("locally_built") {
     ":libxrender1",
     ":libxss1",
     ":libxtst6",
-    # ":nss",
+    ":nss",
     # ":opensc-pkcs11",
     # ":pango1.0",
     # ":pulseaudio",
@@ -825,7 +825,6 @@ instrumented_library("nss") {
     "patches/nss.diff",
     "patches/nss.2.diff",
     "patches/nss.3.diff",
-    "patches/nss.4.diff",
   ]
   build_method = "custom_nss"
 }
