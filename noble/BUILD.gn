@@ -78,7 +78,7 @@ group("locally_built") {
     ":libxtst6",
     ":nss",
     ":opensc-pkcs11",
-    # ":pango1.0",
+    ":pango1.0",
     # ":pulseaudio",
     # ":zlib1g",
   ]
@@ -837,7 +837,7 @@ instrumented_library("pango1.0") {
   build_method = "meson"
   extra_configure_flags = [
     # Avoid https://bugs.gentoo.org/show_bug.cgi?id=425620
-    "-Dintrospection=false",
+    "-Dintrospection=disabled",
   ]
   patches = [ "patches/pango1.0.diff" ]
 }
