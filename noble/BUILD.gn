@@ -79,7 +79,7 @@ group("locally_built") {
     ":nss",
     ":opensc-pkcs11",
     ":pango1.0",
-    # ":pulseaudio",
+    ":pulseaudio",
     # ":zlib1g",
   ]
   data = [ "${root_out_dir}/instrumented_libraries/lib" ]
@@ -843,24 +843,12 @@ instrumented_library("pango1.0") {
 }
 
 instrumented_library("pulseaudio") {
-  # New location of libpulsecommon.
-  package_ldflags = [ "-Wl,-R,XORIGIN/pulseaudio/." ]
-  extra_configure_flags = [
-    "--disable-static",
-
-    # From debian/rules.
-    "--enable-x11",
-    "--disable-hal-compat",
-
-    # Disable some ARM-related code that fails compilation. No idea why
-    # this even impacts x86-64 builds.
-    "--disable-neon-opt",
-
-    # There's a build failure caused (I think) by a missing include, so skip
-    # building the offending file to avoid maintaining a patch.
-    "--disable-android-hal",
+  build_method = "meson"
+  patches = [
+    "patches/pulseaudio.diff",
+    "patches/pulseaudio.2.diff",
+    "patches/pulseaudio.3.diff",
   ]
-  pre_build = "scripts/pre-build/pulseaudio.sh"
 }
 
 instrumented_library("libudev1") {
