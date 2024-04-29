@@ -77,7 +77,7 @@ group("locally_built") {
     ":libxss1",
     ":libxtst6",
     ":nss",
-    # ":opensc-pkcs11",
+    ":opensc-pkcs11",
     # ":pango1.0",
     # ":pulseaudio",
     # ":zlib1g",
