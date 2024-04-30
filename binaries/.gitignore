@@ -2,3 +2,4 @@
 *-lib
 *-lib.tar
 *-lib.tar.gz
+/.*
