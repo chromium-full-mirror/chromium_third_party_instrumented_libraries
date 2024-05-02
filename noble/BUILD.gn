@@ -717,6 +717,7 @@ instrumented_library("libunity9") {
 
 instrumented_library("libva2") {
   build_method = "meson"
+  patches = [ "patches/libva2.diff" ]
 }
 
 instrumented_library("libwayland-client0") {
