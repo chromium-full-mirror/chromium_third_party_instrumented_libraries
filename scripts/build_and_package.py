@@ -140,8 +140,8 @@ def main():
             build_libraries(build_type, args.release, args.jobs, args.use_remoteexec)
     print("To upload, run:")
     for build_type in build_types:
-        print("upload_to_google_storage.py -b "
-              "chromium-instrumented-libraries %s-%s.tgz" %
+        print("upload_to_google_storage_first_class.py -b "
+              "chromium-instrumented-libraries %s-%s-lib.tar.gz" %
               (build_type, args.release))
     print("You should then commit the resulting .sha1 files.")
 

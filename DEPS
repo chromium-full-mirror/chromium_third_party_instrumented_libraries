@@ -19,6 +19,18 @@ deps = {
               'size_bytes': 412727628,
               'generation': 1711405877192100,
           },
+          {
+              'object_name': '7555c7ec286d80d84a736399bc90280d23f32286df09a04a04525f8c54caaf6b',
+              'sha256sum': '7555c7ec286d80d84a736399bc90280d23f32286df09a04a04525f8c54caaf6b',
+              'size_bytes': 464299838,
+              'generation': 1714682852023626,
+          },
+          {
+              'object_name': '80b443575aa2e8db2ca5b1ad3ef28f1d4282923da0b282e676ff53c51708e26f',
+              'sha256sum': '80b443575aa2e8db2ca5b1ad3ef28f1d4282923da0b282e676ff53c51708e26f',
+              'size_bytes': 439401325,
+              'generation': 1714682862140443,
+          },
       ],
   },
 }
