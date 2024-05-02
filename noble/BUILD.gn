@@ -691,18 +691,10 @@ instrumented_library("libssl3t64") {
   ]
 }
 
-instrumented_library("libtasn1-3") {
-  extra_configure_flags = [
-    "--disable-static",
-
-    # From debian/rules.
-    "--enable-ld-version-script",
-  ]
-}
-
 instrumented_library("libtasn1-6") {
   extra_configure_flags = [
     "--disable-static",
+    "--disable-valgrind-tests",
 
     # From debian/rules.
     "--enable-ld-version-script",
