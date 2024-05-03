@@ -21,6 +21,7 @@ group("locally_built") {
     ":libatk-bridge2.0-0t64",
     ":libatspi2.0-0t64",
     ":libavahi-client3",
+    ":libc6",
     ":libcairo2",
     ":libcap2",
     ":libcredentialkit_pkcs11",
@@ -32,6 +33,7 @@ group("locally_built") {
     ":libexpat1",
     ":libffi8",
     ":libfontconfig1",
+    ":libgcc-s1",
     ":libgcrypt20",
     ":libgdk-pixbuf2.0-0",
     ":libglib2.0-0",
@@ -338,6 +340,10 @@ instrumented_library("libavahi-client3") {
   pre_build = "scripts/pre-build/autogen.sh"
 }
 
+instrumented_library("libc6") {
+  build_method = "uninstrumented"
+}
+
 instrumented_library("libcairo2") {
   build_method = "meson"
 }
@@ -442,6 +448,10 @@ instrumented_library("libfontconfig1") {
     # From debian/rules.
     "--with-add-fonts=/usr/X11R6/lib/X11/fonts,/usr/local/share/fonts",
   ]
+}
+
+instrumented_library("libgcc-s1") {
+  build_method = "uninstrumented"
 }
 
 instrumented_library("libgcrypt20") {

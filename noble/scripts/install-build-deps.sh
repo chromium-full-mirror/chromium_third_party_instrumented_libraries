@@ -35,9 +35,11 @@ gyp \
 ido \
 jasper-initramfs \
 libappindicator \
+libc6 \
 libcap2 \
 libdbusmenu \
 libffi \
+libgcc-s1 \
 libgpg-error \
 libidn \
 libindicator \

@@ -573,6 +573,16 @@ class StubBuilder(InstrumentedPackageBuilder):
             pass
 
 
+class UninstrumentedBuilder(DebianBuilder):
+    def init_build_env(self, args_env):
+        self._build_env = os.environ.copy()
+
+        self._build_env.update(dict(args_env))
+
+        self._build_env["DEB_BUILD_OPTIONS"] = (
+            "nocheck notest nodoc nostrip parallel=%d" % os.cpu_count())
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Download, build and install an instrumented package.")
@@ -636,6 +646,8 @@ def main():
         builder = CmakeBuilder(args, clobber)
     elif args.build_method == "stub":
         builder = StubBuilder(args, clobber)
+    elif args.build_method == "uninstrumented":
+        builder = UninstrumentedBuilder(args, clobber)
     else:
         raise Exception("Unrecognized build method: %s" % args.build_method)
 
