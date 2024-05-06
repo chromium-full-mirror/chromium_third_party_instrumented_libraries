@@ -8,9 +8,9 @@ import argparse
 import ast
 import errno
 import fcntl
+import glob
 import multiprocessing
 import os
-import glob
 import re
 import shlex
 import shutil
@@ -338,7 +338,10 @@ class DebianBuilder(InstrumentedPackageBuilder):
                         cwd=self._source_dir)
 
     def install_packaged_libs(self):
-        for deb_file in self.get_deb_files():
+        deb_files = self.get_deb_files()
+        if not deb_files:
+            raise Exception("No .deb files were created")
+        for deb_file in deb_files:
             self.shell_call(["dpkg-deb", "-x", deb_file, self.temp_dir()])
 
         dpkg_arch_cmd = ["dpkg-architecture", "-qDEB_HOST_MULTIARCH"]
@@ -574,13 +577,16 @@ class StubBuilder(InstrumentedPackageBuilder):
 
 
 class UninstrumentedBuilder(DebianBuilder):
-    def init_build_env(self, args_env):
-        self._build_env = os.environ.copy()
 
-        self._build_env.update(dict(args_env))
+    def build_debian_packages(self):
+        command = ["apt-get", "download", self._package]
+        self.shell_call(command, cwd=self._working_dir)
 
-        self._build_env["DEB_BUILD_OPTIONS"] = (
-            "nocheck notest nodoc nostrip parallel=%d" % os.cpu_count())
+    def get_deb_files(self):
+        return [
+            os.path.join(self._working_dir, file)
+            for file in os.listdir(self._working_dir) if file.endswith(".deb")
+        ]
 
 
 def main():
