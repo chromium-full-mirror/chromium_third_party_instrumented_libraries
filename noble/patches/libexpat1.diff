@@ -1,23 +1,21 @@
-diff --color -rupN expat-2.2.9/expat/lib/xmlparse.c expat-2.2.9.new/expat/lib/xmlparse.c
---- expat-2.2.9/expat/lib/xmlparse.c	2022-10-19 22:46:59.000000000 +0000
-+++ expat-2.2.9.new/expat/lib/xmlparse.c	2022-10-19 23:28:41.859811027 +0000
-@@ -650,6 +650,8 @@ static const XML_Char implicitContext[]
- 
- #  if defined(HAVE_GETRANDOM) || defined(HAVE_SYSCALL_GETRANDOM)
+diff --git a/expat/lib/xmlparse.c b/expat/lib/xmlparse.c
+index d44baa6..d0252b1 100644
+--- a/expat/lib/xmlparse.c
++++ b/expat/lib/xmlparse.c
+@@ -1038,11 +1038,15 @@ callProcessor(XML_Parser parser, const char *start, const char *end,
+   return ret;
+ }
  
 +void __msan_unpoison(void *, size_t);
 +
- /* Obtain entropy on Linux 3.17+ */
- static int
- writeRandomBytes_getrandom_nonblock(void *target, size_t count) {
-@@ -675,6 +677,10 @@ writeRandomBytes_getrandom_nonblock(void
-     }
-   } while (! success && (errno == EINTR));
- 
-+  // MSAN doesn't recognise |syscall| and thus doesn't notice that we have
-+  // initialised the output buffer.
-+  __msan_unpoison(target, count);
-+
-   return success;
- }
- 
+ static XML_Bool /* only valid for root parser */
+ startParsing(XML_Parser parser) {
+   /* hash functions must be initialized before setContext() is called */
+-  if (parser->m_hash_secret_salt == 0)
++  if (parser->m_hash_secret_salt == 0) {
+     parser->m_hash_secret_salt = generate_hash_secret_salt(parser);
++    __msan_unpoison(&parser->m_hash_secret_salt, sizeof(parser->m_hash_secret_salt));
++  }
+   if (parser->m_ns) {
+     /* implicit context only set for root parser, since child
+        parsers (i.e. external entity parsers) will inherit it
