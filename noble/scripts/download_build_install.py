@@ -326,6 +326,7 @@ class DebianBuilder(InstrumentedPackageBuilder):
         self._build_env["DEB_LDFLAGS_APPEND"] = " ".join(self._ldflags)
         self._build_env["DEB_BUILD_OPTIONS"] = (
             "nocheck notest nodoc nostrip parallel=%d" % os.cpu_count())
+        self._build_env["DEB_BUILD_MAINT_OPTIONS"] = "optimize=-lto"
 
     def build_and_install(self):
         self.build_debian_packages()
