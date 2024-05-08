@@ -218,11 +218,6 @@ class InstrumentedPackageBuilder(object):
         if self._clobber:
             self.shell_call(["rm", "-rf", self._working_dir])
 
-    def fix_rpaths(self, directory):
-        # TODO(eugenis): reimplement fix_rpaths.sh in Python.
-        script = real_path("scripts/fix_rpaths.sh")
-        self.shell_call([script, directory])
-
     def temp_dir(self):
         """Returns the directory which will be passed to `make install'."""
         return os.path.join(self._source_dir, "debian", "instrumented_build")
@@ -298,8 +293,6 @@ class InstrumentedPackageBuilder(object):
 
     def post_install(self):
         self.cleanup_after_install()
-
-        self.fix_rpaths(self.temp_libdir())
 
         # Now move the contents of the temporary destdir to their final place.
         # We only care for the contents of LIBDIR.
@@ -407,8 +400,6 @@ class LibcapBuilder(InstrumentedPackageBuilder):
 
         self.cleanup_after_install()
 
-        self.fix_rpaths(self.temp_libdir())
-
         # Now move the contents of the temporary destdir to their final place.
         # We only care for the contents of LIBDIR.
         self.shell_call("cp %s/* %s/ -rdf" %
@@ -466,9 +457,7 @@ class Libpci3Builder(InstrumentedPackageBuilder):
             "LIBKMOD=no",
         ]
         self.make(make_args)
-
         # `make install' is not needed.
-        self.fix_rpaths(self.temp_libdir())
 
         # Now install the DSOs to their final place.
         self.shell_call(
@@ -553,8 +542,6 @@ class NSSBuilder(InstrumentedPackageBuilder):
             cwd=temp_dir,
             env=self._build_env,
         )
-
-        self.fix_rpaths(temp_libdir)
 
         # 'make install' is not supported. Copy the DSOs manually.
         for (dirpath, dirnames, filenames) in os.walk(temp_libdir):

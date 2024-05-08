@@ -10,6 +10,8 @@ import os
 import subprocess
 import tarfile
 
+import fix_rpaths
+
 BUILD_TYPES = {
     "msan-no-origins": [
         "is_msan = true",
@@ -70,9 +72,11 @@ def build_libraries(build_type, ubuntu_release, jobs, use_remoteexec):
     ])
     release = _get_release()
     name = '%s-%s-lib' % (build_type, release)
+    lib_dir = "%s/instrumented_libraries/lib" % build_dir
+    fix_rpaths.fix_rpaths(lib_dir)
     with tarfile.open("%s.tar.gz" % name, mode="w:gz") as f:
         f.add(
-            "%s/instrumented_libraries/lib" % build_dir,
+            lib_dir,
             arcname=name + "/lib",
             filter=_tar_filter,
         )
