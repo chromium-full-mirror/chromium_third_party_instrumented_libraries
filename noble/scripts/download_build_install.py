@@ -351,26 +351,28 @@ class DebianBuilder(InstrumentedPackageBuilder):
             "usr/lib/%s" % dpkg_arch,
             "lib/%s" % dpkg_arch,
         ]
-        lib_paths = [
-            path for lib_dir in lib_dirs for path in glob.glob(
-                os.path.join(self.temp_dir(), lib_dir, "*.so.*"))
-        ]
-        for lib_path in lib_paths:
-            dest_path = os.path.join(self.dest_libdir(),
-                                     os.path.basename(lib_path))
-            try:
-                os.unlink(dest_path)
-            except OSError as exception:
-                if exception.errno != errno.ENOENT:
-                    raise
-            if os.path.islink(lib_path):
-                if self._verbose:
-                    print("linking %s" % os.path.basename(lib_path))
-                os.symlink(os.readlink(lib_path), dest_path)
-            elif os.path.isfile(lib_path):
-                if self._verbose:
-                    print("copying %s" % os.path.basename(lib_path))
-                shutil.copy(lib_path, dest_path)
+        for lib_dir in lib_dirs:
+            full_lib_dir = os.path.join(self.temp_dir(), lib_dir)
+            lib_paths = glob.glob(
+                os.path.join(full_lib_dir, "**", "*.so[.0-9]*"),
+                recursive=True)
+            for lib_path in lib_paths:
+                relative_path = os.path.relpath(lib_path, start=full_lib_dir)
+                dest_path = os.path.join(self.dest_libdir(), relative_path)
+                os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+                try:
+                    os.unlink(dest_path)
+                except OSError as exception:
+                    if exception.errno != errno.ENOENT:
+                        raise
+                if os.path.islink(lib_path):
+                    if self._verbose:
+                        print("linking %s" % os.path.basename(lib_path))
+                    os.symlink(os.readlink(lib_path), dest_path)
+                elif os.path.isfile(lib_path):
+                    if self._verbose:
+                        print("copying %s" % os.path.basename(lib_path))
+                    shutil.copy(lib_path, dest_path)
 
     def get_deb_files(self):
         deb_files = []
