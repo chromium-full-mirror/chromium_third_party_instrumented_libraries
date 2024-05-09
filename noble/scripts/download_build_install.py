@@ -347,7 +347,7 @@ class DebianBuilder(InstrumentedPackageBuilder):
         for lib_dir in lib_dirs:
             full_lib_dir = os.path.join(self.temp_dir(), lib_dir)
             lib_paths = glob.glob(
-                os.path.join(full_lib_dir, "**", "*.so[.0-9]*"),
+                os.path.join(full_lib_dir, "**", "*.so*"),
                 recursive=True)
             for lib_path in lib_paths:
                 relative_path = os.path.relpath(lib_path, start=full_lib_dir)
