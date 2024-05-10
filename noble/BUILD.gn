@@ -829,6 +829,7 @@ instrumented_library("nss") {
     "patches/nss.2.diff",
     "patches/nss.3.diff",
     "patches/nss.4.diff",
+    "patches/nss.5.diff",
   ]
   build_method = "custom_nss"
 }
