@@ -801,7 +801,10 @@ instrumented_library("libxinerama1") {
 
 instrumented_library("libxkbcommon0") {
   build_method = "meson"
-  patches = [ "patches/libxkbcommon0.diff" ]
+  patches = [
+    "patches/libxkbcommon0.diff",
+    "patches/libxkbcommon0.2.diff",
+  ]
 }
 
 instrumented_library("libxrandr2") {
