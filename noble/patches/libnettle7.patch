@@ -1,0 +1,14 @@
+diff --git a/fat-x86_64.c b/fat-x86_64.c
+index 0a2fedf..a45ff6f 100644
+--- a/fat-x86_64.c
++++ b/fat-x86_64.c
+@@ -99,7 +99,8 @@ get_x86_features (struct x86_features *features)
+       }
+   else
+     {
+-      uint32_t cpuid_data[4];
++      // MSAN isn't aware the cpuid instruction initializes memory.
++      uint32_t cpuid_data[4] = {0, 0, 0, 0};
+       _nettle_cpuid (0, cpuid_data);
+       if (memcmp (cpuid_data + 1, "Genu" "ntel" "ineI", 12) == 0)
+ 	features->vendor = X86_INTEL;

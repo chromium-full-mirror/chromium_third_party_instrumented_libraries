@@ -626,6 +626,7 @@ instrumented_library("liboss4-salsa-asound2") {
 }
 
 instrumented_library("libnettle7") {
+  patches = [ "patches/libnettle7.patch" ]
 }
 
 instrumented_library("libnghttp2-14") {
