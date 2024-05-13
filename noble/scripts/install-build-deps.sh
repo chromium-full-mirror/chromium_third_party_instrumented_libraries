@@ -46,6 +46,7 @@ libindicator \
 libjpeg-turbo \
 libldap2 \
 libmicrohttpd \
+libnghttp2-14 \
 liboss4-salsa-asound2 \
 libpng1.6 \
 libunity \

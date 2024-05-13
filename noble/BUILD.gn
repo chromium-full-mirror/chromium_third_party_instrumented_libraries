@@ -46,6 +46,7 @@ group("locally_built") {
     ":libjpeg-turbo8",
     ":libldap2",
     ":libnettle7",
+    ":libnghttp2-14",
     ":libnspr4",
     ":liboss4-salsa-asound2",
     ":libp11-kit0",
@@ -625,6 +626,10 @@ instrumented_library("liboss4-salsa-asound2") {
 }
 
 instrumented_library("libnettle7") {
+}
+
+instrumented_library("libnghttp2-14") {
+  build_method = "debian"
 }
 
 instrumented_library("libp11-kit0") {
