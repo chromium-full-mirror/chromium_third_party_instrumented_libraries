@@ -488,7 +488,10 @@ instrumented_library("libglib2.0-0") {
         "halt_on_error=0 exitcode=0",
       ] ]
 
-  patches = [ "patches/libglib2.diff" ]
+  patches = [
+    "patches/libglib2.diff",
+    "patches/libglib2.2.diff",
+  ]
 }
 
 instrumented_library("libgnutls30t64") {
