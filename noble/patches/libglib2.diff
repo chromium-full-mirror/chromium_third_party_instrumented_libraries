@@ -1,0 +1,21 @@
+diff --git a/glib/gfileutils.c b/glib/gfileutils.c
+index 2801777..067bd18 100644
+--- a/glib/gfileutils.c
++++ b/glib/gfileutils.c
+@@ -883,6 +883,8 @@ error:
+   return FALSE;
+ }
+ 
++void __msan_unpoison(void *, size_t);
++
+ static gboolean
+ get_contents_posix (const gchar  *filename,
+                     gchar       **contents,
+@@ -921,6 +923,7 @@ get_contents_posix (const gchar  *filename,
+ 
+       return FALSE;
+     }
++  __msan_unpoison(&stat_buf, sizeof(stat_buf));
+ 
+   if (stat_buf.st_size > 0 && S_ISREG (stat_buf.st_mode))
+     {

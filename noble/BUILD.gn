@@ -487,6 +487,8 @@ instrumented_library("libglib2.0-0") {
         "MSAN_OPTIONS",
         "halt_on_error=0 exitcode=0",
       ] ]
+
+  patches = [ "patches/libglib2.diff" ]
 }
 
 instrumented_library("libgnutls30t64") {
