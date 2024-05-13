@@ -517,6 +517,9 @@ instrumented_library("libgnutls30t64") {
     # Remove symbols from the version script that aren't compiled with
     # hardware acceleration disabled.
     "patches/libgnutls30.3.diff",
+
+    # Fix some uninitialized variables.
+    "patches/libgnutls30.4.diff",
   ]
 }
 
