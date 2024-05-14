@@ -1,0 +1,13 @@
+diff --git a/providers/implementations/rands/drbg_ctr.c b/providers/implementations/rands/drbg_ctr.c
+index 451113c..328a730 100644
+--- a/providers/implementations/rands/drbg_ctr.c
++++ b/providers/implementations/rands/drbg_ctr.c
+@@ -263,7 +263,7 @@ __owur static int ctr_update(PROV_DRBG *drbg,
+ {
+     PROV_DRBG_CTR *ctr = (PROV_DRBG_CTR *)drbg->data;
+     int outlen = AES_BLOCK_SIZE;
+-    unsigned char V_tmp[48], out[48];
++    unsigned char V_tmp[48], out[48] = {0};
+     unsigned char len;
+ 
+     /* correct key is already set up. */

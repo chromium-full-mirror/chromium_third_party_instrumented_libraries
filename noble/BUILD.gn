@@ -706,7 +706,10 @@ instrumented_library("libsecret") {
 
 instrumented_library("libssl3t64") {
   build_method = "debian"
-  patches = [ "patches/libssl3t64.diff" ]
+  patches = [
+    "patches/libssl3t64.diff",
+    "patches/libssl3t64.2.diff",
+  ]
 }
 
 instrumented_library("libtasn1-6") {
