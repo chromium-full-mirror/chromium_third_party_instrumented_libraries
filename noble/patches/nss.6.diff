@@ -1,0 +1,12 @@
+diff --git a/nss/lib/softoken/pkcs11c.c b/nss/lib/softoken/pkcs11c.c
+index 856c98e..068f725 100644
+--- a/nss/lib/softoken/pkcs11c.c
++++ b/nss/lib/softoken/pkcs11c.c
+@@ -6567,6 +6567,7 @@ NSC_UnwrapKey(CK_SESSION_HANDLE hSession,
+      * this assumes the unwrapped key is never larger than the
+      * wrapped key. For all the mechanisms we support this is true */
+     buf = (unsigned char *)PORT_Alloc(ulWrappedKeyLen);
++    memset(buf, 0, ulWrappedKeyLen);
+     bsize = ulWrappedKeyLen;
+ 
+     crv = NSC_Decrypt(hSession, pWrappedKey, ulWrappedKeyLen, buf, &bsize);
