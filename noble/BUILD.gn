@@ -253,6 +253,11 @@ instrumented_library("cups") {
         "MSAN_OPTIONS",
         "halt_on_error=0 exitcode=0",
       ] ]
+
+  patches = [
+    "patches/cups.diff",
+    "patches/cups.2.diff",
+  ]
 }
 
 instrumented_library("dee") {
