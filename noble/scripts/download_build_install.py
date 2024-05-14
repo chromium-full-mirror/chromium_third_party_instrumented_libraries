@@ -48,6 +48,7 @@ def real_path(path_relative_to_gn):
 
 class InstrumentedPackageBuilder(object):
     """Checks out and builds a single instrumented package."""
+
     def __init__(self, args, clobber):
         self._cc = args.cc
         self._cxx = args.cxx
@@ -283,7 +284,7 @@ class InstrumentedPackageBuilder(object):
         }
         if not configure_exists:
             # Specify LIBDIR in case ./configure isn't used for this package.
-            args['LIBDIR'] = '/%s/' % self._libdir
+            args["LIBDIR"] = "/%s/" % self._libdir
         make_args = ["%s=%s" % item for item in args.items()]
         self.make(make_args + self._make_targets)
 
@@ -306,6 +307,7 @@ class DebianBuilder(InstrumentedPackageBuilder):
 
     TODO(spang): Probably the rest of the packages should also use this method..
     """
+
     def init_build_env(self, args_env):
         self._build_env = os.environ.copy()
 
@@ -346,9 +348,8 @@ class DebianBuilder(InstrumentedPackageBuilder):
         ]
         for lib_dir in lib_dirs:
             full_lib_dir = os.path.join(self.temp_dir(), lib_dir)
-            lib_paths = glob.glob(
-                os.path.join(full_lib_dir, "**", "*.so*"),
-                recursive=True)
+            lib_paths = glob.glob(os.path.join(full_lib_dir, "**", "*.so*"),
+                                  recursive=True)
             for lib_path in lib_paths:
                 relative_path = os.path.relpath(lib_path, start=full_lib_dir)
                 dest_path = os.path.join(self.dest_libdir(), relative_path)
@@ -405,19 +406,6 @@ class LibcapBuilder(InstrumentedPackageBuilder):
         self.shell_call("cp %s/* %s/ -rdf" %
                         (self.temp_libdir(), self.dest_libdir()),
                         shell=True)
-
-
-class LibcurlBuilder(DebianBuilder):
-    def build_and_install(self):
-        super().build_and_install()
-        # The libcurl packages don't specify a default libcurl.so, but this is
-        # required since libcurl.so is dlopen()ed by crashpad.  Normally,
-        # libcurl.so is installed by one of libcurl-{gnutls,nss,openssl}-dev.
-        # Doing a standalone instrumented build of a dev package is tricky,
-        # so we manually symlink libcurl.so instead.
-        libcurl_so = os.path.join(self.dest_libdir(), "libcurl.so")
-        if not os.path.exists(libcurl_so):
-            os.symlink("libcurl.so.4", libcurl_so)
 
 
 class Libpci3Builder(InstrumentedPackageBuilder):
@@ -505,13 +493,17 @@ class CmakeBuilder(InstrumentedPackageBuilder):
             ".",
             "-DCMAKE_INSTALL_PREFIX=/usr",
             "-DCMAKE_INSTALL_LIBDIR=/%s/" % self._libdir,
+            "-GNinja",
         ] + self._extra_configure_flags
         self.shell_call(cmake_cmd, env=self._build_env, cwd=self._source_dir)
 
-        args = ["DESTDIR", "BUILDROOT", "INSTALL_ROOT"]
-        make_args = ["%s=%s" % (name, self.temp_dir()) for name in args]
-        self.make(make_args)
-        self.make_install(make_args)
+        self.shell_call(
+            ["ninja", "install"],
+            {
+                **self._build_env, "DESTDIR": self.temp_dir()
+            },
+            cwd=self._source_dir,
+        )
 
         self.post_install()
 
@@ -522,7 +514,7 @@ class NSSBuilder(InstrumentedPackageBuilder):
             with multiprocessing.Semaphore():
                 pass
         except (OSError, PermissionError):
-            raise Exception('/dev/shm must be mounted')
+            raise Exception("/dev/shm must be mounted")
 
         # Hardcoded paths.
         temp_dir = os.path.join(self._source_dir, "nss")
@@ -567,7 +559,6 @@ class StubBuilder(InstrumentedPackageBuilder):
 
 
 class UninstrumentedBuilder(DebianBuilder):
-
     def build_debian_packages(self):
         command = ["apt-get", "download", self._package]
         self.shell_call(command, cwd=self._working_dir)
