@@ -584,6 +584,7 @@ instrumented_library("libjpeg-turbo8") {
 instrumented_library("libldap2") {
   extra_configure_flags = [
     "--disable-slapd",
+    "--without-cyrus-sasl",
 
     # From debian/rules.
     "--enable-debug",
@@ -593,7 +594,6 @@ instrumented_library("libldap2") {
     "--enable-ipv6",
     "--enable-local",
     "--with-subdir=ldap",
-    "--with-cyrus-sasl",
     "--without-threads",
     "--with-gssapi",
     "--with-tls=gnutls",

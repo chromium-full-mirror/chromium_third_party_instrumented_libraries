@@ -1,8 +1,16 @@
 diff --git a/libraries/libldap/ldap.map b/libraries/libldap/ldap.map
-index b28c9c2..29791e7 100644
+index b28c9c2..e78cfd0 100644
 --- a/libraries/libldap/ldap.map
 +++ b/libraries/libldap/ldap.map
-@@ -167,7 +167,6 @@ OPENLDAP_2.200
+@@ -151,7 +151,6 @@ OPENLDAP_2.200
+     ldap_get_option;
+     ldap_get_values;
+     ldap_get_values_len;
+-    ldap_host_connected_to;
+     ldap_init;
+     ldap_init_fd;
+     ldap_initialize;
+@@ -167,7 +166,6 @@ OPENLDAP_2.200
      ldap_int_flush_request;
      ldap_int_global_options;
      ldap_int_hostname;
@@ -10,17 +18,19 @@ index b28c9c2..29791e7 100644
      ldap_int_inet4or6;
      ldap_int_initialize;
      ldap_int_initialize_global_options;
-@@ -177,7 +176,6 @@ OPENLDAP_2.200
+@@ -177,21 +175,7 @@ OPENLDAP_2.200
      ldap_int_parse_ruleid;
      ldap_int_poll;
      ldap_int_put_controls;
 -    ldap_int_resolv_mutex;
-     ldap_int_sasl_bind;
-     ldap_int_sasl_close;
-     ldap_int_sasl_config;
-@@ -187,11 +185,6 @@ OPENLDAP_2.200
-     ldap_int_sasl_open;
-     ldap_int_sasl_set_option;
+-    ldap_int_sasl_bind;
+-    ldap_int_sasl_close;
+-    ldap_int_sasl_config;
+-    ldap_int_sasl_external;
+-    ldap_int_sasl_get_option;
+-    ldap_int_sasl_init;
+-    ldap_int_sasl_open;
+-    ldap_int_sasl_set_option;
      ldap_int_select;
 -    ldap_int_stackguard;
 -    ldap_int_thread_destroy;
@@ -30,7 +40,15 @@ index b28c9c2..29791e7 100644
      ldap_int_timeval_dup;
      ldap_int_tls_destroy;
      ldap_int_tls_impl;
-@@ -295,25 +288,12 @@ OPENLDAP_2.200
+@@ -268,7 +252,6 @@ OPENLDAP_2.200
+     ldap_parse_reference;
+     ldap_parse_refresh;
+     ldap_parse_result;
+-    ldap_parse_sasl_bind_result;
+     ldap_parse_session_tracking_control;
+     ldap_parse_sortresponse_control;
+     ldap_parse_verify_credentials;
+@@ -295,101 +278,17 @@ OPENLDAP_2.200
      ldap_pvt_hex_unescape;
      ldap_pvt_put_control;
      ldap_pvt_put_filter;
@@ -43,20 +61,28 @@ index b28c9c2..29791e7 100644
 -    ldap_pvt_runqueue_resched;
 -    ldap_pvt_runqueue_runtask;
 -    ldap_pvt_runqueue_stoptask;
-     ldap_pvt_sasl_cbinding;
-     ldap_pvt_sasl_cbinding_parse;
-     ldap_pvt_sasl_generic_install;
-     ldap_pvt_sasl_generic_remove;
-     ldap_pvt_sasl_getmechs;
-     ldap_pvt_sasl_install;
+-    ldap_pvt_sasl_cbinding;
+-    ldap_pvt_sasl_cbinding_parse;
+-    ldap_pvt_sasl_generic_install;
+-    ldap_pvt_sasl_generic_remove;
+-    ldap_pvt_sasl_getmechs;
+-    ldap_pvt_sasl_install;
 -    ldap_pvt_sasl_mutex_dispose;
 -    ldap_pvt_sasl_mutex_lock;
 -    ldap_pvt_sasl_mutex_new;
 -    ldap_pvt_sasl_mutex_unlock;
-     ldap_pvt_sasl_remove;
-     ldap_pvt_sasl_secprops;
-     ldap_pvt_sasl_secprops_unparse;
-@@ -329,67 +309,6 @@ OPENLDAP_2.200
+-    ldap_pvt_sasl_remove;
+-    ldap_pvt_sasl_secprops;
+-    ldap_pvt_sasl_secprops_unparse;
+     ldap_pvt_scope2bv;
+     ldap_pvt_scope2str;
+     ldap_pvt_search;
+     ldap_pvt_search_s;
+     ldap_pvt_sockaddrstr;
+-    ldap_pvt_sockbuf_io_sasl_generic;
+     ldap_pvt_str2lower;
+     ldap_pvt_str2lowerbv;
+     ldap_pvt_str2scope;
      ldap_pvt_str2upper;
      ldap_pvt_str2upperbv;
      ldap_pvt_strtok;
