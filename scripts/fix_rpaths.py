@@ -20,6 +20,8 @@ def fix_rpaths(directory: str):
 
     for root, _, files in os.walk(directory):
         for filename in files:
+            if filename.startswith("ld-linux"):
+                continue
             filepath = os.path.join(root, filename)
             if not PATTERN.match(filename) or os.path.islink(filepath):
                 continue
@@ -27,7 +29,7 @@ def fix_rpaths(directory: str):
                 ["patchelf", "--print-rpath", filepath], capture_output=True, text=True
             )
             rpath = result.stdout.strip()
-            if result.returncode != 0 or not rpath:
+            if result.returncode != 0:
                 continue
             paths = []
             for path in rpath.split(":"):
@@ -44,6 +46,13 @@ def fix_rpaths(directory: str):
                     )
                 relative_path = os.path.relpath(os.path.join(directory, path), root)
                 paths.append(os.path.join("$ORIGIN", relative_path))
+
+            # Ensure the RPATH always includes an entry pointing to the instrumented
+            # libraries.  This is required for libraries that are dlopen()ed.
+            relative_path = os.path.relpath(directory, root)
+            default_path = os.path.join("$ORIGIN", relative_path)
+            if default_path not in paths:
+                paths.append(default_path)
 
             new_rpath = ":".join(paths)
             subprocess.run(["patchelf", "--set-rpath", new_rpath, filepath], check=True)
