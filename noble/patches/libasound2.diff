@@ -1,0 +1,13 @@
+diff --git a/configure b/configure
+index 49db682..f07ee33 100755
+--- a/configure
++++ b/configure
+@@ -12342,7 +12342,7 @@ CC=$lt_save_CC
+         LDFLAGS_NOUNDEFINED="-no-undefined"
+         ;;
+      *)
+-                        	for possible_flags in "-Wl,--no-undefined" "-Wl,-z,defs"; do
++                        	for possible_flags in ""; do
+ 
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking if $CC supports $possible_flags flag" >&5
+ $as_echo_n "checking if $CC supports $possible_flags flag... " >&6; }
