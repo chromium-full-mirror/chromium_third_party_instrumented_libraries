@@ -508,6 +508,17 @@ class CmakeBuilder(InstrumentedPackageBuilder):
         self.post_install()
 
 
+class LibcurlBuilder(CmakeBuilder):
+
+    def post_install(self):
+        files = glob.glob(os.path.join(self.temp_dir(), "**", "libcurl.so*"),
+                          recursive=True)
+        for file in files:
+            os.symlink(os.path.basename(file),
+                       file.replace("libcurl.so", "libcurl-gnutls.so"))
+        super().post_install()
+
+
 class NSSBuilder(InstrumentedPackageBuilder):
     def build_and_install(self):
         try:
@@ -536,7 +547,7 @@ class NSSBuilder(InstrumentedPackageBuilder):
         )
 
         # 'make install' is not supported. Copy the DSOs manually.
-        for (dirpath, dirnames, filenames) in os.walk(temp_libdir):
+        for dirpath, dirnames, filenames in os.walk(temp_libdir):
             for filename in filenames:
                 if filename.endswith(".so"):
                     full_path = os.path.join(dirpath, filename)

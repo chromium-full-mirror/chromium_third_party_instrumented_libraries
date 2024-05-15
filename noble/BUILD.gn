@@ -373,7 +373,7 @@ instrumented_library("libcredentialkit_pkcs11") {
 }
 
 instrumented_library("libcurl3t64-gnutls") {
-  build_method = "cmake"
+  build_method = "custom_libcurl"
 }
 
 instrumented_library("libdbus-1-3") {
