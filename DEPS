@@ -21,17 +21,17 @@ deps = {
           },
           # msan-chained-origins-noble-lib
           {
-              'object_name': '75b734b698b68f0fb7dd63531a97a0bfad1a8b1a7b30287278f35e0a60482c25',
-              'sha256sum': '75b734b698b68f0fb7dd63531a97a0bfad1a8b1a7b30287278f35e0a60482c25',
-              'size_bytes': 579704655,
-              'generation': 1715728114929496,
+              'object_name': '49259db99f226d1459e6eb4bfc6d0dbe83891aea55366fd1859d7e2ba4cf3ca0',
+              'sha256sum': '49259db99f226d1459e6eb4bfc6d0dbe83891aea55366fd1859d7e2ba4cf3ca0',
+              'size_bytes': 581839696,
+              'generation': 1715793889874575,
           },
           # msan-no-origins-noble-lib
           {
-              'object_name': 'b92856588988631047e6110900b70bed998672d3439cb6282865825af80b8c7e',
-              'sha256sum': 'b92856588988631047e6110900b70bed998672d3439cb6282865825af80b8c7e',
-              'size_bytes': 558468334,
-              'generation': 1715728145631600,
+              'object_name': '4e91ba46cf47a5d7c4c9c01516f9ab21ce96a9c8ed4a62cec714e3a0c5f3084d',
+              'sha256sum': '4e91ba46cf47a5d7c4c9c01516f9ab21ce96a9c8ed4a62cec714e3a0c5f3084d',
+              'size_bytes': 560198902,
+              'generation': 1715793912257792,
           },
       ],
   },
