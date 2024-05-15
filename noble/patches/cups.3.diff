@@ -1,0 +1,13 @@
+diff --git a/cups/string.c b/cups/string.c
+index a479a7c..fd9597e 100644
+--- a/cups/string.c
++++ b/cups/string.c
+@@ -396,7 +396,7 @@ _cupsStrScand(const char   *buf,	/* I - Pointer to number */
+               char         **bufptr,	/* O - New pointer or NULL on error */
+               struct lconv *loc)	/* I - Locale data */
+ {
+-  char	temp[1024],			/* Temporary buffer */
++  char	temp[1024] = {0},			/* Temporary buffer */
+ 	*tempptr;			/* Pointer into temporary buffer */
+ 
+ 
