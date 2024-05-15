@@ -58,6 +58,7 @@ group("locally_built") {
     ":librtmp1",
     ":libsasl2-2",
     ":libsecret",
+    ":libssh2-1t64",
     ":libssl3t64",
     ":libtasn1-6",
     ":libudev1",
@@ -703,6 +704,9 @@ instrumented_library("libsecret") {
     "-Dgtk_doc=false",
     "-Dintrospection=false",
   ]
+}
+
+instrumented_library("libssh2-1t64") {
 }
 
 instrumented_library("libssl3t64") {
