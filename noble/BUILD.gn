@@ -516,6 +516,8 @@ instrumented_library("libglib2.0-0") {
     "patches/libglib2.4.diff",
     "patches/libglib2.5.diff",
     "patches/libglib2.6.diff",
+    "patches/libglib2.7.diff",
+    "patches/libglib2.8.diff",
   ]
 }
 

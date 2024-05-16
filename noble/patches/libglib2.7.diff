@@ -1,0 +1,21 @@
+diff --git a/glib/gmappedfile.c b/glib/gmappedfile.c
+index 4d7a89e..345bb2e 100644
+--- a/glib/gmappedfile.c
++++ b/glib/gmappedfile.c
+@@ -111,6 +111,8 @@ g_mapped_file_destroy (GMappedFile *file)
+   g_slice_free (GMappedFile, file);
+ }
+ 
++void __msan_unpoison(void *, size_t);
++
+ static GMappedFile*
+ mapped_file_new_from_fd (int           fd,
+ 			 gboolean      writable,
+@@ -141,6 +143,7 @@ mapped_file_new_from_fd (int           fd,
+       g_free (display_filename);
+       goto out;
+     }
++  __msan_unpoison(&st, sizeof(st));
+ 
+   /* mmap() on size 0 will fail with EINVAL, so we avoid calling mmap()
+    * in that case -- but only if we have a regular file; we still want
