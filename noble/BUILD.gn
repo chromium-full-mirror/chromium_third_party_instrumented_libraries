@@ -473,6 +473,8 @@ instrumented_library("libgcrypt20") {
     # http://crbug.com/344505
     "--disable-asm",
   ]
+
+  patches = [ "patches/libgcrypt20.diff" ]
 }
 
 instrumented_library("libgdk-pixbuf-2.0-0") {
