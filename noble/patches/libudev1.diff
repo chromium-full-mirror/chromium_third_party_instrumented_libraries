@@ -1,0 +1,62 @@
+diff --git a/src/basic/chase.c b/src/basic/chase.c
+index 26bc2d6..1287565 100644
+--- a/src/basic/chase.c
++++ b/src/basic/chase.c
+@@ -79,6 +79,8 @@ static int chaseat_needs_absolute(int dir_fd, const char *path) {
+         return dir_fd_is_root(dir_fd);
+ }
+ 
++void __msan_unpoison(const volatile void *, size_t);
++
+ int chaseat(int dir_fd, const char *path, ChaseFlags flags, char **ret_path, int *ret_fd) {
+         _cleanup_free_ char *buffer = NULL, *done = NULL;
+         _cleanup_close_ int fd = -EBADF, root_fd = -EBADF;
+@@ -233,6 +235,7 @@ int chaseat(int dir_fd, const char *path, ChaseFlags flags, char **ret_path, int
+ 
+         if (fstat(fd, &st) < 0)
+                 return -errno;
++	__msan_unpoison(&st, sizeof(st));
+ 
+         /* If we get AT_FDCWD, we always resolve symlinks relative to the host's root. Only if a positive
+          * directory file descriptor is provided we will look at CHASE_AT_RESOLVE_IN_ROOT to determine
+@@ -287,6 +290,7 @@ int chaseat(int dir_fd, const char *path, ChaseFlags flags, char **ret_path, int
+ 
+                         if (fstat(fd_parent, &st_parent) < 0)
+                                 return -errno;
++			__msan_unpoison(&st_parent, sizeof(st_parent));
+ 
+                         /* If we opened the same directory, that _may_ indicate that we're at the host root
+                          * directory. Let's confirm that in more detail with dir_fd_is_root(). And if so,
+@@ -398,6 +402,7 @@ int chaseat(int dir_fd, const char *path, ChaseFlags flags, char **ret_path, int
+ 
+                 if (fstat(child, &st_child) < 0)
+                         return -errno;
++		__msan_unpoison(&st_child, sizeof(st_child));
+ 
+                 if (FLAGS_SET(flags, CHASE_SAFE) &&
+                     unsafe_transition(&st, &st_child))
+diff --git a/src/basic/stat-util.c b/src/basic/stat-util.c
+index c54374b..4291174 100644
+--- a/src/basic/stat-util.c
++++ b/src/basic/stat-util.c
+@@ -183,6 +183,8 @@ int path_is_read_only_fs(const char *path) {
+         return fd_is_read_only_fs(fd);
+ }
+ 
++void __msan_unpoison(const volatile void *, size_t);
++
+ int inode_same_at(int fda, const char *filea, int fdb, const char *fileb, int flags) {
+         struct stat a, b;
+ 
+@@ -193,9 +195,11 @@ int inode_same_at(int fda, const char *filea, int fdb, const char *fileb, int fl
+ 
+         if (fstatat(fda, filea, &a, flags) < 0)
+                 return log_debug_errno(errno, "Cannot stat %s: %m", filea);
++	__msan_unpoison(&a, sizeof(a));
+ 
+         if (fstatat(fdb, fileb, &b, flags) < 0)
+                 return log_debug_errno(errno, "Cannot stat %s: %m", fileb);
++	__msan_unpoison(&b, sizeof(b));
+ 
+         return stat_inode_same(&a, &b);
+ }

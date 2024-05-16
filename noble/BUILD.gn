@@ -899,6 +899,7 @@ instrumented_library("pulseaudio") {
     "patches/pulseaudio.diff",
     "patches/pulseaudio.2.diff",
     "patches/pulseaudio.3.diff",
+    "patches/pulseaudio.4.diff",
   ]
 }
 
@@ -907,6 +908,9 @@ instrumented_library("libudev1") {
   extra_configure_flags = [
     "-Defi=false",
     "-Ddbus-interfaces-dir=no",
+  ]
+  patches = [
+    "patches/libudev1.diff",
   ]
 }
 
