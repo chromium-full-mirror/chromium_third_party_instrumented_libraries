@@ -1,0 +1,33 @@
+diff --git a/gdk-pixbuf/meson.build b/gdk-pixbuf/meson.build
+index 67598aa..7355ffc 100644
+--- a/gdk-pixbuf/meson.build
++++ b/gdk-pixbuf/meson.build
+@@ -355,8 +355,8 @@ if not meson.is_cross_build()
+                                 output: 'loaders.cache',
+                                 capture: true,
+                                 command: [
+-                                  gdk_pixbuf_query_loaders,
+-                                  dynamic_loaders,
++                                  'touch',
++                                  'lodaers.cache',
+                                 ],
+                                 depends: dynamic_loaders_dep,
+                                 build_by_default: true)
+diff --git a/thumbnailer/meson.build b/thumbnailer/meson.build
+index b6a206d..c88a45d 100644
+--- a/thumbnailer/meson.build
++++ b/thumbnailer/meson.build
+@@ -17,12 +17,7 @@ custom_target('thumbnailer',
+               input: 'gdk-pixbuf-thumbnailer.thumbnailer.in',
+               output: 'gdk-pixbuf-thumbnailer.thumbnailer',
+               command: [
+-                gen_thumbnailer,
+-                '--printer=@0@'.format(gdk_pixbuf_print_mime_types.full_path()),
+-                '--pixdata=@0@'.format(gdk_pixbuf_pixdata.full_path()),
+-                '--loaders=@0@'.format(loaders_cache.full_path()),
+-                '--bindir=@0@'.format(gdk_pixbuf_bindir),
+-                '@INPUT@',
++                'touch',
+                 '@OUTPUT@',
+               ],
+               depends: [

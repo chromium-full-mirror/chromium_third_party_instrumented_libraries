@@ -1,0 +1,21 @@
+diff --git a/glib/gfileutils.c b/glib/gfileutils.c
+index 067bd18..4e9973c 100644
+--- a/glib/gfileutils.c
++++ b/glib/gfileutils.c
+@@ -254,6 +254,8 @@ g_mkdir_with_parents (const gchar *pathname,
+   return 0;
+ }
+ 
++void __msan_unpoison(void *, size_t);
++
+ /**
+  * g_file_test:
+  * @filename: (type filename): a filename to test in the
+@@ -453,6 +455,7 @@ g_file_test (const gchar *filename,
+       
+       if (stat (filename, &s) == 0)
+ 	{
++	  __msan_unpoison(&s, sizeof(s));
+ 	  if ((test & G_FILE_TEST_IS_REGULAR) && S_ISREG (s.st_mode))
+ 	    return TRUE;
+ 	  

@@ -37,6 +37,7 @@ group("locally_built") {
     ":libfontconfig1",
     ":libgcc-s1",
     ":libgcrypt20",
+    ":libgdk-pixbuf-2.0-0",
     ":libgdk-pixbuf2.0-0",
     ":libglib2.0-0",
     ":libgnutls30t64",
@@ -474,6 +475,20 @@ instrumented_library("libgcrypt20") {
   ]
 }
 
+instrumented_library("libgdk-pixbuf-2.0-0") {
+  build_method = "meson"
+
+  extra_configure_flags = [
+    "-Dgtk_doc=false",
+    "-Dinstalled_tests=false",
+    "-Dintrospection=disabled",
+    "-Dman=false",
+    "-Dtests=false",
+  ]
+
+  patches = [ "patches/libgdk-pixbuf.diff" ]
+}
+
 instrumented_library("libgdk-pixbuf2.0-0") {
   build_method = "meson"
 }
@@ -497,6 +512,10 @@ instrumented_library("libglib2.0-0") {
   patches = [
     "patches/libglib2.diff",
     "patches/libglib2.2.diff",
+    "patches/libglib2.3.diff",
+    "patches/libglib2.4.diff",
+    "patches/libglib2.5.diff",
+    "patches/libglib2.6.diff",
   ]
 }
 
