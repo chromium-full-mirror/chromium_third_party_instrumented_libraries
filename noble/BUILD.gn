@@ -316,8 +316,11 @@ instrumented_library("libappindicator3-1") {
 }
 
 instrumented_library("libasound2t64") {
-  # Don't warn about undefined sanitizer symbols.
-  patches = [ "patches/libasound2.diff" ]
+  patches = [
+    # Don't warn about undefined sanitizer symbols.
+    "patches/libasound2.diff",
+    "patches/libasound2.2.diff",
+  ]
 }
 
 instrumented_library("libatk-bridge2.0-0t64") {

@@ -1,0 +1,21 @@
+diff --git a/src/conf.c b/src/conf.c
+index eca44c0..f14e6dc 100644
+--- a/src/conf.c
++++ b/src/conf.c
+@@ -4124,6 +4124,8 @@ static int config_file_open(snd_config_t *root, const char *filename)
+ 	return err;
+ }
+ 
++void __msan_unpoison(void *, size_t);
++
+ static int config_file_load(snd_config_t *root, const char *fn, int errors)
+ {
+ 	struct stat64 st;
+@@ -4136,6 +4138,7 @@ static int config_file_load(snd_config_t *root, const char *fn, int errors)
+ 		SNDERR("cannot stat file/directory %s", fn);
+ 		return 1;
+ 	}
++	__msan_unpoison(&st, sizeof(st));
+ 	if (!S_ISDIR(st.st_mode))
+ 		return config_file_open(root, fn);
+ #ifndef DOC_HIDDEN
