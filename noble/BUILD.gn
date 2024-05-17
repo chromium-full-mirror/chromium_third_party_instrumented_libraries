@@ -6,6 +6,10 @@ import("//build/config/python.gni")
 import("//build/config/sanitizers/sanitizers.gni")
 import("//build/toolchain/goma.gni")
 
+static_library("stat_wrapper") {
+  sources = [ "stat_wrapper.c" ]
+}
+
 group("locally_built") {
   visibility = [ "//third_party/instrumented_libs:deps" ]
 
@@ -123,6 +127,30 @@ template("instrumented_library") {
     package_ldflags = [
       "-fsanitize=memory",
       "-fuse-ld=lld",
+      "-Wl,--wrap=stat",
+      "-Wl,--wrap=fstat",
+      "-Wl,--wrap=lstat",
+      "-Wl,--wrap=fstatat",
+      "-Wl,--wrap=statfs",
+      "-Wl,--wrap=fstatfs",
+      "-Wl,--wrap=statvfs",
+      "-Wl,--wrap=fstatvfs",
+      "-Wl,--wrap=statx",
+      "-Wl,--wrap=stat64",
+      "-Wl,--wrap=fstat64",
+      "-Wl,--wrap=lstat64",
+      "-Wl,--wrap=fstatat64",
+      "-Wl,--wrap=__fstat64",
+      "-Wl,--wrap=__fxstat64",
+      "-Wl,--wrap=__fxstatat64",
+      "-Wl,--wrap=__lxstat64",
+      "-Wl,--wrap=__xstat64",
+      "-Wl,--wrap=fstatfs64",
+      "-Wl,--wrap=fstatvfs64",
+      "-Wl,--wrap=statfs64",
+      "-Wl,--wrap=statvfs64",
+      rebase_path(get_label_info(":stat_wrapper", "target_out_dir") +
+                  "/stat_wrapper/stat_wrapper.o"),
     ]
     if (defined(invoker.package_cflags)) {
       package_cflags += invoker.package_cflags
@@ -130,8 +158,9 @@ template("instrumented_library") {
     if (defined(invoker.package_ldflags)) {
       package_ldflags += invoker.package_ldflags
     }
+    deps = [ ":stat_wrapper" ]
     if (defined(invoker.deps)) {
-      deps = invoker.deps
+      deps += invoker.deps
     }
     env = []
     if (defined(invoker.env)) {
@@ -319,7 +348,6 @@ instrumented_library("libasound2t64") {
   patches = [
     # Don't warn about undefined sanitizer symbols.
     "patches/libasound2.diff",
-    "patches/libasound2.2.diff",
   ]
 }
 
@@ -513,17 +541,6 @@ instrumented_library("libglib2.0-0") {
         "MSAN_OPTIONS",
         "halt_on_error=0 exitcode=0",
       ] ]
-
-  patches = [
-    "patches/libglib2.diff",
-    "patches/libglib2.2.diff",
-    "patches/libglib2.3.diff",
-    "patches/libglib2.4.diff",
-    "patches/libglib2.5.diff",
-    "patches/libglib2.6.diff",
-    "patches/libglib2.7.diff",
-    "patches/libglib2.8.diff",
-  ]
 }
 
 instrumented_library("libgnutls30t64") {
@@ -654,8 +671,6 @@ instrumented_library("libnspr4") {
     "--disable-debug",
   ]
   pre_build = "scripts/pre-build/libnspr4.sh"
-
-  patches = [ "patches/libnspr4.diff" ]
 }
 
 instrumented_library("libnettle7") {
@@ -843,10 +858,7 @@ instrumented_library("libxinerama1") {
 
 instrumented_library("libxkbcommon0") {
   build_method = "meson"
-  patches = [
-    "patches/libxkbcommon0.diff",
-    "patches/libxkbcommon0.2.diff",
-  ]
+  patches = [ "patches/libxkbcommon0.diff" ]
 }
 
 instrumented_library("libxrandr2") {
@@ -874,7 +886,6 @@ instrumented_library("nss") {
     "patches/nss.2.diff",
     "patches/nss.3.diff",
     "patches/nss.4.diff",
-    "patches/nss.5.diff",
     "patches/nss.6.diff",
   ]
   build_method = "custom_nss"
@@ -899,7 +910,6 @@ instrumented_library("pulseaudio") {
     "patches/pulseaudio.diff",
     "patches/pulseaudio.2.diff",
     "patches/pulseaudio.3.diff",
-    "patches/pulseaudio.4.diff",
   ]
 }
 
@@ -908,9 +918,6 @@ instrumented_library("libudev1") {
   extra_configure_flags = [
     "-Defi=false",
     "-Ddbus-interfaces-dir=no",
-  ]
-  patches = [
-    "patches/libudev1.diff",
   ]
 }
 
