@@ -1,0 +1,30 @@
+diff --git a/src/cairo-ft-font.c b/src/cairo-ft-font.c
+index bf0872e..dcb3b4e 100644
+--- a/src/cairo-ft-font.c
++++ b/src/cairo-ft-font.c
+@@ -635,8 +635,15 @@ _cairo_ft_unscaled_font_create_for_pattern (FcPattern *pattern,
+     ret = FcPatternGetString (pattern, FC_FILE, 0, (FcChar8 **) &filename);
+     if (ret == FcResultOutOfMemory)
+ 	return _cairo_error (CAIRO_STATUS_NO_MEMORY);
++    char resolved[PATH_MAX + 1];
++    const char* sysroot = (const char*)FcConfigGetSysRoot(FcConfigGetCurrent());
++    if (sysroot == NULL)
++        sysroot = "";
++    if (snprintf(resolved, sizeof(resolved), "%s%s", sysroot, filename) >= sizeof(resolved))
++	return _cairo_error (CAIRO_STATUS_FILE_NOT_FOUND);
++
+     if (ret == FcResultMatch) {
+-	if (access (filename, R_OK) == 0) {
++	if (access (resolved, R_OK) == 0) {
+ 	    /* If FC_INDEX is not set, we just use 0 */
+ 	    ret = FcPatternGetInteger (pattern, FC_INDEX, 0, &id);
+ 	    if (ret == FcResultOutOfMemory)
+@@ -653,7 +660,7 @@ _cairo_ft_unscaled_font_create_for_pattern (FcPattern *pattern,
+ 
+ DONE:
+     return _cairo_ft_unscaled_font_create_internal (font_face != NULL,
+-						    filename, id, font_face,
++						    &resolved, id, font_face,
+ 						    out);
+ }
+ #endif
