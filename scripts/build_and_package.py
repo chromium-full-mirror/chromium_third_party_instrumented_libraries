@@ -108,7 +108,7 @@ def main():
         "--use_remoteexec",
         action="store_true",
         default=False,
-        help="whether to use goma to compile",
+        help="whether to use reclient to compile",
     )
     parser.add_argument(
         "build_type",
