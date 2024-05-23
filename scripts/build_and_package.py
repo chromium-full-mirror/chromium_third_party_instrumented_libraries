@@ -7,6 +7,8 @@
 import argparse
 import multiprocessing
 import os
+import re
+import stat
 import subprocess
 import tarfile
 
@@ -23,11 +25,7 @@ BUILD_TYPES = {
     ],
 }
 
-IGNORED_SUFFIXES = [
-    ".txt",
-    # Skip a missing symlink.
-    "99-environment.conf",
-]
+SO_PATTERN = re.compile(r'.*\.so[.0-9]*')
 
 
 class Error(Exception):
@@ -44,8 +42,32 @@ def _get_release():
 
 
 def _tar_filter(tar_info):
-    if any(tar_info.name.endswith(suffix) for suffix in IGNORED_SUFFIXES):
+    path = tar_info.name.split("/")
+
+    # Ignore the build-generated stamp files.
+    if path[1].endswith(".txt"):
         return None
+
+    # Omit git directories from sources.  They can contain non-writable files.
+    if path[1] == "sources" and ".git" in path:
+        return None
+
+    # Always allow directories (except .git).
+    if tar_info.type == tarfile.DIRTYPE:
+        # Ensure directories are writable otherwise if it has any contents,
+        # the archive won't be extractable.
+        tar_info.mode |= stat.S_IWUSR
+        return tar_info
+
+    # Omit non-libraries in LIBDIR.
+    if path[1] == "lib" and not SO_PATTERN.fullmatch(path[-1]):
+        return None
+
+    # Ensure no non-writable files exist in the archive, otherwise extraction
+    # issues can occur.
+    if not (tar_info.mode & stat.S_IWUSR):
+        raise Exception("Non-writable file: " + tar_info.name)
+
     return tar_info
 
 
