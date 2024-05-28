@@ -626,6 +626,10 @@ instrumented_library("libindicator3-7") {
 
 instrumented_library("libjpeg-turbo8") {
   build_method = "cmake"
+  extra_configure_flags = [
+    "-DWITH_JAVA=1",
+    "-DWITH_JPEG8=1",
+  ]
 }
 
 instrumented_library("libldap2") {
