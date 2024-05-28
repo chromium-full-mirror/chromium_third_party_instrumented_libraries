@@ -288,6 +288,7 @@ instrumented_library("cups") {
     "patches/cups.diff",
     "patches/cups.2.diff",
     "patches/cups.3.diff",
+    "patches/cups.4.diff",
   ]
 }
 
