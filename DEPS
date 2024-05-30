@@ -1,5 +1,13 @@
 use_relative_paths = True
 
+vars = {
+  # This exists so that upstream projects can control it.
+  'checkout_instrumented_libraries': True,
+
+  # condition to allowlist deps for non-git-source processing.
+  'non_git_source': 'True',
+}
+
 deps = {
 
   'binaries': {
