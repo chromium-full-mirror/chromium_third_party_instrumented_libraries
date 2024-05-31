@@ -3,6 +3,7 @@
 # found in the LICENSE file.
 
 import("//build/config/sanitizers/sanitizers.gni")
+import("//build/symlink.gni")
 
 declare_args() {
   instrumented_libraries_release = "noble"
@@ -16,6 +17,11 @@ if (prebuilt_instrumented_libraries_available) {
   }
 }
 
+symlink("ld-linux") {
+  source = "//third_party/instrumented_libs/binaries/$archive/lib/ld-linux-x86-64.so.2"
+  output = "$root_build_dir/third_party/instrumented_libs/binaries/$archive/lib/ld-linux-x86-64.so.2"
+}
+
 group("deps") {
   if (use_locally_built_instrumented_libraries) {
     deps = [ "//third_party/instrumented_libs/$instrumented_libraries_release:locally_built" ]
@@ -24,6 +30,7 @@ group("deps") {
            "Prebuilt instrumented libraries are only available when " +
                "is_msan = true and msan_track_origins = {0, 2}")
     data = [ "//third_party/instrumented_libs/binaries/$archive/lib" ]
+    deps = [ ":ld-linux" ]
   }
 }
 
@@ -41,7 +48,7 @@ if (prebuilt_instrumented_libraries_available) {
     if (instrumented_libraries_release != "focal") {
       ldflags += [
         # Ensure the instrumented_libraries-provided ld.so is used.
-        "-Wl,--dynamic-linker=../../third_party/instrumented_libs/binaries/$archive/lib/ld-linux-x86-64.so.2",
+        "-Wl,--dynamic-linker=third_party/instrumented_libs/binaries/$archive/lib/ld-linux-x86-64.so.2",
       ]
     }
   }
