@@ -17,9 +17,16 @@ if (prebuilt_instrumented_libraries_available) {
   }
 }
 
+_ld_linux =
+    "third_party/instrumented_libs/binaries/$archive/lib/ld-linux-x86-64.so.2"
+
 symlink("ld-linux") {
-  source = "//third_party/instrumented_libs/binaries/$archive/lib/ld-linux-x86-64.so.2"
-  output = "$root_build_dir/third_party/instrumented_libs/binaries/$archive/lib/ld-linux-x86-64.so.2"
+  source = "//$_ld_linux"
+  output = "$root_build_dir/$_ld_linux"
+
+  # Ninja uses the timestamp of the symlinked source to determine if a target
+  # has been built, so touch the source after the symlink has been created.
+  touch = true
 }
 
 group("deps") {
@@ -29,7 +36,12 @@ group("deps") {
     assert(prebuilt_instrumented_libraries_available,
            "Prebuilt instrumented libraries are only available when " +
                "is_msan = true and msan_track_origins = {0, 2}")
-    data = [ "//third_party/instrumented_libs/binaries/$archive/lib" ]
+    data = [
+      "//third_party/instrumented_libs/binaries/$archive/lib",
+
+      # Declare ld-linux as a data dependency so it gets included by mb.py zip.
+      "$root_build_dir/$_ld_linux",
+    ]
     deps = [ ":ld-linux" ]
   }
 }
