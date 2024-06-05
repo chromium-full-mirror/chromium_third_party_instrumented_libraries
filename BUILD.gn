@@ -3,7 +3,6 @@
 # found in the LICENSE file.
 
 import("//build/config/sanitizers/sanitizers.gni")
-import("//build/symlink.gni")
 
 declare_args() {
   instrumented_libraries_release = "noble"
@@ -20,13 +19,9 @@ if (prebuilt_instrumented_libraries_available) {
 _ld_linux =
     "third_party/instrumented_libs/binaries/$archive/lib/ld-linux-x86-64.so.2"
 
-symlink("ld-linux") {
-  source = "//$_ld_linux"
-  output = "$root_build_dir/$_ld_linux"
-
-  # Ninja uses the timestamp of the symlinked source to determine if a target
-  # has been built, so touch the source after the symlink has been created.
-  touch = true
+copy("ld-linux") {
+  sources = [ "//$_ld_linux" ]
+  outputs = [ "$root_build_dir/$_ld_linux" ]
 }
 
 group("deps") {
