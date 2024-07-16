@@ -51,13 +51,10 @@ if (prebuilt_instrumented_libraries_available) {
 
       # Add some padding to allow RPATHs to be modified later.
       "-Wl,-R,________________________________________________________________________________________________PADDING________________________________________________________________________________________________",
+
+      # Ensure the instrumented_libraries-provided ld.so is used.
+      "-Wl,--dynamic-linker=third_party/instrumented_libs/binaries/$archive/lib/ld-linux-x86-64.so.2",
     ]
-    if (instrumented_libraries_release != "focal") {
-      ldflags += [
-        # Ensure the instrumented_libraries-provided ld.so is used.
-        "-Wl,--dynamic-linker=third_party/instrumented_libs/binaries/$archive/lib/ld-linux-x86-64.so.2",
-      ]
-    }
   }
 }
 
@@ -70,11 +67,8 @@ config("locally_built_ldflags") {
 
     # Add some padding to allow RPATHs to be modified later.
     "-Wl,-R,________________________________________________________________PADDING________________________________________________________________",
+
+    # Ensure the instrumented_libraries-provided ld.so is used.
+    "-Wl,--dynamic-linker=instrumented_libraries/binaries/$archive/lib/ld-linux-x86-64.so.2",
   ]
-  if (instrumented_libraries_release != "focal") {
-    ldflags += [
-      # Ensure the instrumented_libraries-provided ld.so is used.
-      "-Wl,--dynamic-linker=instrumented_libraries/binaries/$archive/lib/ld-linux-x86-64.so.2",
-    ]
-  }
 }
