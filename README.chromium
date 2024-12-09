@@ -1,6 +1,6 @@
 Name: instrumented_libraries
-URL: n/a
-Version: N/A
+URL: https://releases.ubuntu.com/focal/
+Version: 20.04.6
 Revision: DEPS
 Security Critical: no
 Shipped: no
