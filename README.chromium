@@ -3,6 +3,7 @@ URL: https://releases.ubuntu.com/focal/
 Version: 20.04.6
 Revision: DEPS
 Security Critical: no
+Update Mechanism: Manual
 Shipped: no
 License: n/a
 
