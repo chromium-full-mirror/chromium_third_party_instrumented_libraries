@@ -7,6 +7,9 @@ import("//build/config/sanitizers/sanitizers.gni")
 
 static_library("stat_wrapper") {
   sources = [ "stat_wrapper.c" ]
+  configs -= [ "//build/config/sanitizers:default_sanitizer_flags" ]
+  configs +=
+      [ "//build/config/sanitizers:default_sanitizer_flags_but_coverage" ]
 }
 
 group("locally_built") {
@@ -389,6 +392,7 @@ instrumented_library("libc6") {
 
 instrumented_library("libcairo2") {
   build_method = "meson"
+
   # Ensure the fontconfig sysroot is used when resolving filenames.
   patches = [ "patches/libcairo2.diff" ]
 }
@@ -905,6 +909,7 @@ instrumented_library("pango1.0") {
   ]
   patches = [
     "patches/pango1.0.diff",
+
     # Remove a variable length function with many arguments since
     # otherwise a false positive will be reported.
     "patches/pango1.0.2.diff",

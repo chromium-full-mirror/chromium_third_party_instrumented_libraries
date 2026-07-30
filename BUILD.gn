@@ -14,30 +14,45 @@ if (prebuilt_instrumented_libraries_available) {
   } else if (msan_track_origins == 2) {
     archive = "msan-chained-origins-$instrumented_libraries_release-lib"
   }
-}
 
-_ld_linux =
-    "third_party/instrumented_libs/binaries/$archive/lib/ld-linux-x86-64.so.2"
+  _ld_linux =
+      "third_party/instrumented_libs/binaries/$archive/lib/ld-linux-x86-64.so.2"
 
-copy("ld-linux") {
-  sources = [ "//$_ld_linux" ]
-  outputs = [ "$root_build_dir/$_ld_linux" ]
-}
+  copy("ld-linux") {
+    sources = [ "//$_ld_linux" ]
+    outputs = [ "$root_build_dir/$_ld_linux" ]
+  }
 
-# When prebuilt instrumented libraries are used, we need to tell those built
-# binaries need to load the following libraries via BUILD.gn configs so that
-# siso uploads these files to remote workers.
-config("msan_runtime_libs") {
-  inputs = [
-    "//$root_build_dir/third_party/instrumented_libs/binaries/$archive/lib/ld-linux-x86-64.so.2",
-    "binaries/$archive/lib/libc.so.6",
-    "binaries/$archive/lib/libdl.so.2",
-    "binaries/$archive/lib/libgcc_s.so.1",
-    "binaries/$archive/lib/libm.so.6",
-    "binaries/$archive/lib/libpthread.so.0",
-    "binaries/$archive/lib/libresolv.so.2",
-    "binaries/$archive/lib/librt.so.1",
-  ]
+  # When prebuilt instrumented libraries are used, we need to tell those built
+  # binaries need to load the following libraries via BUILD.gn configs so that
+  # siso uploads these files to remote workers.
+  config("msan_runtime_libs") {
+    inputs = [
+      "//$root_build_dir/third_party/instrumented_libs/binaries/$archive/lib/ld-linux-x86-64.so.2",
+      "binaries/$archive/lib/libc.so.6",
+      "binaries/$archive/lib/libdl.so.2",
+      "binaries/$archive/lib/libgcc_s.so.1",
+      "binaries/$archive/lib/libm.so.6",
+      "binaries/$archive/lib/libpthread.so.0",
+      "binaries/$archive/lib/libresolv.so.2",
+      "binaries/$archive/lib/librt.so.1",
+    ]
+  }
+
+  config("prebuilt_ldflags") {
+    ldflags = [
+      # Add a relative RPATH entry to Chromium binaries. This puts instrumented
+      # DSOs before system-installed versions in library search path.
+      "-Wl,-R,\$ORIGIN/../../third_party/instrumented_libs/binaries/$archive/lib",
+      "-Wl,-z,origin",
+
+      # Add some padding to allow RPATHs to be modified later.
+      "-Wl,-R,________________________________________________________________________________________________PADDING________________________________________________________________________________________________",
+
+      # Ensure the instrumented_libraries-provided ld.so is used.
+      "-Wl,--dynamic-linker=third_party/instrumented_libs/binaries/$archive/lib/ld-linux-x86-64.so.2",
+    ]
+  }
 }
 
 group("deps") {
@@ -57,23 +72,6 @@ group("deps") {
   }
 }
 
-if (prebuilt_instrumented_libraries_available) {
-  config("prebuilt_ldflags") {
-    ldflags = [
-      # Add a relative RPATH entry to Chromium binaries. This puts instrumented
-      # DSOs before system-installed versions in library search path.
-      "-Wl,-R,\$ORIGIN/../../third_party/instrumented_libs/binaries/$archive/lib",
-      "-Wl,-z,origin",
-
-      # Add some padding to allow RPATHs to be modified later.
-      "-Wl,-R,________________________________________________________________________________________________PADDING________________________________________________________________________________________________",
-
-      # Ensure the instrumented_libraries-provided ld.so is used.
-      "-Wl,--dynamic-linker=third_party/instrumented_libs/binaries/$archive/lib/ld-linux-x86-64.so.2",
-    ]
-  }
-}
-
 config("locally_built_ldflags") {
   ldflags = [
     # Add a relative RPATH entry to Chromium binaries. This puts instrumented
@@ -85,6 +83,6 @@ config("locally_built_ldflags") {
     "-Wl,-R,________________________________________________________________PADDING________________________________________________________________",
 
     # Ensure the instrumented_libraries-provided ld.so is used.
-    "-Wl,--dynamic-linker=instrumented_libraries/binaries/$archive/lib/ld-linux-x86-64.so.2",
+    "-Wl,--dynamic-linker=instrumented_libraries/lib/ld-linux-x86-64.so.2",
   ]
 }
