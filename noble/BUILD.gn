@@ -5,11 +5,17 @@
 import("//build/config/python.gni")
 import("//build/config/sanitizers/sanitizers.gni")
 
+config("no_crel") {
+  cflags = [ "-Wa,--no-crel" ]
+}
+
 static_library("stat_wrapper") {
   sources = [ "stat_wrapper.c" ]
   configs -= [ "//build/config/sanitizers:default_sanitizer_flags" ]
-  configs +=
-      [ "//build/config/sanitizers:default_sanitizer_flags_but_coverage" ]
+  configs += [
+    "//build/config/sanitizers:default_sanitizer_flags_but_coverage",
+    ":no_crel",
+  ]
 }
 
 group("locally_built") {
@@ -54,7 +60,7 @@ group("locally_built") {
     ":libindicator3-7",
     ":libjpeg-turbo8",
     ":libldap2",
-    ":libnettle7",
+    ":libnettle8t64",
     ":libnghttp2-14",
     ":libnspr4",
     ":libp11-kit0",
@@ -536,7 +542,10 @@ instrumented_library("libglib2.0-0") {
   ]
   msan_ignorelist = "ignorelists/msan/libglib2.0-0.txt"
   pre_build = "scripts/pre-build/libglib2.0-0.sh"
-  package_cflags = [ "-Wno-int-conversion" ]
+  package_cflags = [
+    "-Wno-int-conversion",
+    "-Wno-implicit-function-declaration",
+  ]
 
   # Ignore MSAN errors during the build.
   env = [ [
@@ -592,7 +601,10 @@ instrumented_library("libgtk-3-0t64") {
     "-Dexamples=false",
     "-Dtests=false",
   ]
-  package_cflags = [ "-Wno-int-conversion" ]
+  package_cflags = [
+    "-Wno-int-conversion",
+    "-Wno-incompatible-pointer-types",
+  ]
   patches = [
     # MSAN does not support GL, so it must be disabled in GTK.
     # https://www.chromium.org/developers/testing/memorysanitizer#TOC-Disable-OpenGL
@@ -679,8 +691,8 @@ instrumented_library("libnspr4") {
   pre_build = "scripts/pre-build/libnspr4.sh"
 }
 
-instrumented_library("libnettle7") {
-  patches = [ "patches/libnettle7.patch" ]
+instrumented_library("libnettle8t64") {
+  patches = [ "patches/libnettle8t64.diff" ]
 }
 
 instrumented_library("libnghttp2-14") {

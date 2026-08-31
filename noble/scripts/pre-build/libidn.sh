@@ -11,4 +11,4 @@ sed -i "s/-no-undefined//g" ./lib/Makefile.am
 sed -i "s/-Wl,-z,defs//g" ./debian/rules
 
 # Ignore symbol differences.
-rm ./debian/libidn12.symbols
+rm -f ./debian/libidn12.symbols

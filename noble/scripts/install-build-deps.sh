@@ -66,6 +66,7 @@ libxrandr \
 libxrender \
 libxss \
 libxtst \
+nettle \
 nspr \
 nss \
 opensc \
@@ -83,3 +84,5 @@ wayland \
 zlib"
 
 sudo apt-get build-dep -y $packages
+# Packages needed for git-based dependencies (e.g. guest-oslogin) not covered by apt-get build-dep.
+sudo apt-get install -y libjson-c-dev libpam0g-dev

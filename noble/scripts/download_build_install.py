@@ -95,9 +95,20 @@ class InstrumentedPackageBuilder(object):
         self._build_env["CC"] = self._cc
         self._build_env["CXX"] = self._cxx
 
+        llvm_dir = os.path.dirname(self._cc)
+        for tool in ("ar", "nm", "ranlib"):
+            llvm_tool = os.path.join(llvm_dir, f"llvm-{tool}")
+            if os.path.exists(llvm_tool):
+                self._build_env[tool.upper()] = llvm_tool
+
         self._build_env["CFLAGS"] = " ".join(self._cflags)
         self._build_env["CXXFLAGS"] = " ".join(self._cflags)
         self._build_env["LDFLAGS"] = " ".join(self._ldflags)
+
+        self._build_env["DEB_BUILD_OPTIONS"] = (
+            "nocheck notest nodoc nostrip parallel=%d optimize=-lto" %
+            os.cpu_count())
+        self._build_env["DEB_BUILD_MAINT_OPTIONS"] = "optimize=-lto"
 
         # libappindicator1 needs this.
         self._build_env["CSC"] = "/usr/bin/mono-csc"
@@ -309,19 +320,11 @@ class DebianBuilder(InstrumentedPackageBuilder):
     """
 
     def init_build_env(self, args_env):
-        self._build_env = os.environ.copy()
-
-        self._build_env.update(dict(args_env))
-
-        self._build_env["CC"] = self._cc
-        self._build_env["CXX"] = self._cxx
+        super().init_build_env(args_env)
 
         self._build_env["DEB_CFLAGS_APPEND"] = " ".join(self._cflags)
         self._build_env["DEB_CXXFLAGS_APPEND"] = " ".join(self._cflags)
         self._build_env["DEB_LDFLAGS_APPEND"] = " ".join(self._ldflags)
-        self._build_env["DEB_BUILD_OPTIONS"] = (
-            "nocheck notest nodoc nostrip parallel=%d" % os.cpu_count())
-        self._build_env["DEB_BUILD_MAINT_OPTIONS"] = "optimize=-lto"
 
     def build_and_install(self):
         self.build_debian_packages()

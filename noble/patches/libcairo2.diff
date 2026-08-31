@@ -24,7 +24,7 @@ index bf0872e..dcb3b4e 100644
  DONE:
      return _cairo_ft_unscaled_font_create_internal (font_face != NULL,
 -						    filename, id, font_face,
-+						    &resolved, id, font_face,
++						    resolved, id, font_face,
  						    out);
  }
  #endif

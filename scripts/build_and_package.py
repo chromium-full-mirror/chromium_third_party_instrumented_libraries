@@ -8,6 +8,7 @@ import argparse
 import multiprocessing
 import os
 import re
+import shutil
 import stat
 import subprocess
 import tarfile
@@ -59,8 +60,8 @@ def _tar_filter(tar_info):
         tar_info.mode |= stat.S_IWUSR
         return tar_info
 
-    # Omit non-libraries in LIBDIR.
-    if path[1] == "lib" and not SO_PATTERN.fullmatch(path[-1]):
+    # Omit non-libraries in LIBDIR and LDDIR.
+    if path[1] in ("lib", "ld") and not SO_PATTERN.fullmatch(path[-1]):
         return None
 
     # Ensure no non-writable files exist in the archive, otherwise extraction
@@ -95,8 +96,17 @@ def build_libraries(build_type, ubuntu_release, jobs, use_remoteexec):
     release = _get_release()
     name = '%s-%s-lib' % (build_type, release)
     lib_dir = "%s/instrumented_libraries/lib" % build_dir
+    ld_dir = "%s/instrumented_libraries/ld" % build_dir
+    os.makedirs(ld_dir, exist_ok=True)
+    shutil.copy(os.path.join(lib_dir, "ld-linux-x86-64.so.2"),
+                os.path.join(ld_dir, "ld-linux-x86-64.so.2"))
     fix_rpaths.fix_rpaths(lib_dir)
     with tarfile.open("%s.tar.gz" % name, mode="w:gz") as f:
+        f.add(
+            ld_dir,
+            arcname=name + "/ld",
+            filter=_tar_filter,
+        )
         f.add(
             lib_dir,
             arcname=name + "/lib",

@@ -3,6 +3,7 @@
 # found in the LICENSE file.
 
 import("//build/config/sanitizers/sanitizers.gni")
+import("//build/symlink.gni")
 
 declare_args() {
   instrumented_libraries_release = "noble"
@@ -16,11 +17,18 @@ if (prebuilt_instrumented_libraries_available) {
   }
 
   _ld_linux =
-      "third_party/instrumented_libs/binaries/$archive/lib/ld-linux-x86-64.so.2"
+      "third_party/instrumented_libs/binaries/$archive/ld/ld-linux-x86-64.so.2"
+  _lib_dir = "third_party/instrumented_libs/binaries/$archive/lib"
 
   copy("ld-linux") {
     sources = [ "//$_ld_linux" ]
     outputs = [ "$root_build_dir/$_ld_linux" ]
+  }
+
+  symlink("lib") {
+    source = "//$_lib_dir"
+    output = "$root_build_dir/$_lib_dir"
+    deps = [ ":ld-linux" ]
   }
 
   # When prebuilt instrumented libraries are used, we need to tell those built
@@ -28,7 +36,7 @@ if (prebuilt_instrumented_libraries_available) {
   # siso uploads these files to remote workers.
   config("msan_runtime_libs") {
     inputs = [
-      "//$root_build_dir/third_party/instrumented_libs/binaries/$archive/lib/ld-linux-x86-64.so.2",
+      "//$root_build_dir/third_party/instrumented_libs/binaries/$archive/ld/ld-linux-x86-64.so.2",
       "binaries/$archive/lib/libc.so.6",
       "binaries/$archive/lib/libdl.so.2",
       "binaries/$archive/lib/libgcc_s.so.1",
@@ -50,7 +58,7 @@ if (prebuilt_instrumented_libraries_available) {
       "-Wl,-R,________________________________________________________________________________________________PADDING________________________________________________________________________________________________",
 
       # Ensure the instrumented_libraries-provided ld.so is used.
-      "-Wl,--dynamic-linker=third_party/instrumented_libs/binaries/$archive/lib/ld-linux-x86-64.so.2",
+      "-Wl,--dynamic-linker=third_party/instrumented_libs/binaries/$archive/ld/ld-linux-x86-64.so.2",
     ]
   }
 }
@@ -68,7 +76,10 @@ group("deps") {
       # Declare ld-linux as a data dependency so it gets included by mb.py zip.
       "$root_build_dir/$_ld_linux",
     ]
-    deps = [ ":ld-linux" ]
+    deps = [
+      ":ld-linux",
+      ":lib",
+    ]
   }
 }
 
@@ -83,6 +94,6 @@ config("locally_built_ldflags") {
     "-Wl,-R,________________________________________________________________PADDING________________________________________________________________",
 
     # Ensure the instrumented_libraries-provided ld.so is used.
-    "-Wl,--dynamic-linker=instrumented_libraries/lib/ld-linux-x86-64.so.2",
+    "-Wl,--dynamic-linker=instrumented_libraries/ld/ld-linux-x86-64.so.2",
   ]
 }
