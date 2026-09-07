@@ -71,6 +71,7 @@ group("deps") {
            "Prebuilt instrumented libraries are only available when " +
                "is_msan = true and msan_track_origins = {0, 2}")
     data = [
+      "//$_ld_linux",
       "//third_party/instrumented_libs/binaries/$archive/lib",
 
       # Declare ld-linux as a data dependency so it gets included by mb.py zip.
