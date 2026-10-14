@@ -1,12 +1,14 @@
 Name: instrumented_libraries
-URL: https://releases.ubuntu.com/focal/
-Version: 20.04.6
-Revision: DEPS
+URL: This is the canonical public repository
+Version: N/A
 Security Critical: no
-Update Mechanism: Manual
 Shipped: no
-License: n/a
+Update Mechanism: Manual
+License: BSD-3-Clause
 
 Description:
-Scripts which can download and build several third party libraries
-using different instrumentation tools (MemorySanitizer, etc.).
+This repo contains scripts written by Chromium authors to download and build
+third party libraries for MemorySanitizer builds.
+
+The built libraries are published as CIPD packages and are only used in tests.
+
