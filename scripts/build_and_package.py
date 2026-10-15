@@ -67,54 +67,54 @@ def _tar_filter(tar_info):
     # Ensure no non-writable files exist in the archive, otherwise extraction
     # issues can occur.
     if not (tar_info.mode & stat.S_IWUSR):
-        raise Exception("Non-writable file: " + tar_info.name)
+        raise Exception(f"Non-writable file: {tar_info.name}")
 
     return tar_info
 
 
 def build_libraries(build_type, ubuntu_release, jobs, use_remoteexec):
-    build_dir = "out/Instrumented-%s" % build_type
+    build_dir = f"out/Instrumented-{build_type}"
     if not os.path.exists(build_dir):
         os.makedirs(build_dir)
 
     gn_args = [
         "is_debug = false",
-        "use_remoteexec = %s" % str(use_remoteexec).lower(),
+        f"use_remoteexec = {str(use_remoteexec).lower()}",
         "use_locally_built_instrumented_libraries = true",
-        'instrumented_libraries_release = "%s"' % ubuntu_release,
+        f'instrumented_libraries_release = "{ubuntu_release}"',
     ] + BUILD_TYPES[build_type]
     with open(os.path.join(build_dir, "args.gn"), "w") as f:
         f.write("\n".join(gn_args) + "\n")
     subprocess.check_call(["gn", "gen", build_dir, "--check"])
     subprocess.check_call([
         "ninja",
-        "-j%d" % jobs,
+        f"-j{jobs}",
         "-C",
         build_dir,
-        "third_party/instrumented_libs/%s:locally_built" % ubuntu_release,
+        f"third_party/instrumented_libs/{ubuntu_release}:locally_built",
     ])
     release = _get_release()
-    name = '%s-%s-lib' % (build_type, release)
-    lib_dir = "%s/instrumented_libraries/lib" % build_dir
-    ld_dir = "%s/instrumented_libraries/ld" % build_dir
+    name = f"{build_type}-{release}-lib"
+    lib_dir = f"{build_dir}/instrumented_libraries/lib"
+    ld_dir = f"{build_dir}/instrumented_libraries/ld"
     os.makedirs(ld_dir, exist_ok=True)
     shutil.copy(os.path.join(lib_dir, "ld-linux-x86-64.so.2"),
                 os.path.join(ld_dir, "ld-linux-x86-64.so.2"))
     fix_rpaths.fix_rpaths(lib_dir)
-    with tarfile.open("%s.tar.gz" % name, mode="w:gz") as f:
+    with tarfile.open(f"{name}.tar.gz", mode="w:gz") as f:
         f.add(
             ld_dir,
-            arcname=name + "/ld",
+            arcname=f"{name}/ld",
             filter=_tar_filter,
         )
         f.add(
             lib_dir,
-            arcname=name + "/lib",
+            arcname=f"{name}/lib",
             filter=_tar_filter,
         )
         f.add(
-            "%s/instrumented_libraries/sources" % build_dir,
-            arcname=name + "/sources",
+            f"{build_dir}/instrumented_libraries/sources",
+            arcname=f"{name}/sources",
             filter=_tar_filter,
         )
 
@@ -157,8 +157,8 @@ def main():
 
     if args.release != _get_release():
         raise IncorrectReleaseError(
-            "trying to build for %s but the current release is %s" %
-            (args.release, _get_release()))
+            f"trying to build for {args.release} but the current release is "
+            f"{_get_release()}")
     build_types = sorted(set(args.build_type))
     if args.parallel:
         procs = []
@@ -177,8 +177,8 @@ def main():
     print("To upload, run:")
     for build_type in build_types:
         print("upload_to_google_storage_first_class.py -b "
-              "chromium-instrumented-libraries %s-%s-lib.tar.gz" %
-              (build_type, args.release))
+              "chromium-instrumented-libraries "
+              f"{build_type}-{args.release}-lib.tar.gz")
     print("You should then commit the resulting .sha1 files.")
 
 
