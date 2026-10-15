@@ -86,3 +86,6 @@ zlib"
 sudo apt-get build-dep -y $packages
 # Packages needed for git-based dependencies (e.g. guest-oslogin) not covered by apt-get build-dep.
 sudo apt-get install -y libjson-c-dev libpam0g-dev
+# Optional dependencies of libudev1 (built from systemd source).  The systemd
+# build-deps can't be installed directly since they conflict with curl's.
+sudo apt-get install -y libcryptsetup-dev libfdisk-dev libfido2-dev libtss2-dev

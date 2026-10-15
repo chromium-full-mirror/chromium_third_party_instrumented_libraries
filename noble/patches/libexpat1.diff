@@ -1,8 +1,6 @@
-diff --git a/expat/lib/xmlparse.c b/expat/lib/xmlparse.c
-index d44baa6..d0252b1 100644
 --- a/expat/lib/xmlparse.c
 +++ b/expat/lib/xmlparse.c
-@@ -1038,11 +1038,15 @@ callProcessor(XML_Parser parser, const char *start, const char *end,
+@@ -1375,11 +1375,15 @@
    return ret;
  }
  
@@ -11,11 +9,10 @@ index d44baa6..d0252b1 100644
  static XML_Bool /* only valid for root parser */
  startParsing(XML_Parser parser) {
    /* hash functions must be initialized before setContext() is called */
--  if (parser->m_hash_secret_salt == 0)
-+  if (parser->m_hash_secret_salt == 0) {
-     parser->m_hash_secret_salt = generate_hash_secret_salt(parser);
-+    __msan_unpoison(&parser->m_hash_secret_salt, sizeof(parser->m_hash_secret_salt));
-+  }
+   if (parser->m_hash_secret_salt_set != XML_TRUE) {
+     parser->m_hash_secret_salt_128 = generate_hash_secret_salt();
++    __msan_unpoison(&parser->m_hash_secret_salt_128,
++                    sizeof(parser->m_hash_secret_salt_128));
+     parser->m_hash_secret_salt_set = XML_TRUE;
+   }
    if (parser->m_ns) {
-     /* implicit context only set for root parser, since child
-        parsers (i.e. external entity parsers) will inherit it
