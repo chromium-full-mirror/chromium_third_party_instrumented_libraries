@@ -101,6 +101,11 @@ class InstrumentedPackageBuilder(object):
             if os.path.exists(llvm_tool):
                 self._build_env[tool.upper()] = llvm_tool
 
+        # The intermediate dir is inside the Chromium checkout. Keep build
+        # scripts that use git (e.g. gnulib's bootstrap) from finding it.
+        self._build_env["GIT_CEILING_DIRECTORIES"] = os.path.dirname(
+            os.path.normpath(self._working_dir))
+
         self._build_env["CFLAGS"] = " ".join(self._cflags)
         self._build_env["CXXFLAGS"] = " ".join(self._cflags)
         self._build_env["LDFLAGS"] = " ".join(self._ldflags)
@@ -376,7 +381,8 @@ class DebianBuilder(InstrumentedPackageBuilder):
         files_file = os.path.join(self._source_dir, "debian/files")
 
         for line in open(files_file, "r").read().splitlines():
-            filename, category, section = line.split(" ")
+            # Each line is "<filename> <section> <priority> [<key>=<value>...]".
+            filename = line.split(" ")[0]
             if not filename.endswith(".deb"):
                 continue
             pathname = os.path.join(self._source_dir, "..", filename)

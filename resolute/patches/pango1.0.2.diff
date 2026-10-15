@@ -1,8 +1,6 @@
-diff --git a/pango/pangofc-fontmap.c b/pango/pangofc-fontmap.c
-index ee972b0..6930c91 100644
 --- a/pango/pangofc-fontmap.c
 +++ b/pango/pangofc-fontmap.c
-@@ -2043,16 +2043,15 @@ pango_fc_make_pattern (const  PangoFontDescription *description,
+@@ -2149,18 +2149,17 @@
     *
     * Do not pass FC_VERTICAL_LAYOUT true as HarfBuzz shaping assumes false.
     */
@@ -15,6 +13,8 @@ index ee972b0..6930c91 100644
 -			    FC_DPI, FcTypeDouble, dpi,
 -			    FC_SIZE,  FcTypeDouble,  pixel_size * (72. / 1024. / dpi),
 -			    FC_PIXEL_SIZE,  FcTypeDouble,  pixel_size / 1024.,
+-                            FC_ORDER, FcTypeInteger, 1000,
+-                            FC_COLOR, FcTypeBool, color,
 -			    NULL);
 +  pattern = FcPatternCreate();
 +  FcPatternAddInteger(pattern, PANGO_FC_VERSION, pango_version());
@@ -25,6 +25,8 @@ index ee972b0..6930c91 100644
 +  FcPatternAddDouble(pattern, FC_DPI, dpi);
 +  FcPatternAddDouble(pattern, FC_SIZE, pixel_size * (72. / 1024. / dpi));
 +  FcPatternAddDouble(pattern, FC_PIXEL_SIZE, pixel_size / 1024.);
++  FcPatternAddInteger(pattern, FC_ORDER, 1000);
++  FcPatternAddBool(pattern, FC_COLOR, color);
  
    if (variations)
      FcPatternAddString (pattern, FC_FONT_VARIATIONS, (FcChar8*) variations);

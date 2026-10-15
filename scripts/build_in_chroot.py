@@ -87,6 +87,14 @@ RELEASES = {
             "tar": "1.35+dfsg-3build1",
         },
     },
+    "resolute": {
+        "base_tarball_url":
+        "https://cdimage.ubuntu.com/ubuntu-base/releases/26.04/release/"
+        "ubuntu-base-26.04.1-base-amd64.tar.gz",
+        "base_tarball_sha256":
+        "a496a960472ce474a59590b8987d3a1135d3cbef1991f3b1abe8cacfea8bf85a",
+        "apt_pins": {},
+    },
 }
 
 PROOT_URL = "https://github.com/proot-me/proot/releases/download/v5.5.0/proot"

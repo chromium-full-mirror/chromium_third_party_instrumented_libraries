@@ -75,7 +75,7 @@ p11-kit \
 pango1.0 \
 patchelf \
 pciutils \
-pcre3 \
+pcre2 \
 pixman \
 pkgconf \
 pulseaudio \

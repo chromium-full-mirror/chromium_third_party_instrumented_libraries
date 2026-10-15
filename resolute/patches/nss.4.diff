@@ -1,17 +1,6 @@
-diff --git a/nss/lib/freebl/freebl.gyp b/nss/lib/freebl/freebl.gyp
-index c4beb34..765f051 100644
 --- a/nss/lib/freebl/freebl.gyp
 +++ b/nss/lib/freebl/freebl.gyp
-@@ -559,8 +559,6 @@
-           'defines!': [
-             'FREEBL_NO_DEPEND',
-             'FREEBL_LOWHASH',
--            'USE_HW_AES',
--            'INTEL_GCM',
-             'PPC_GCM',
-           ],
-           'conditions': [
-@@ -776,8 +774,6 @@
+@@ -783,8 +783,6 @@
                'MP_ASSEMBLY_DIV_2DX1D',
                'MP_USE_UINT_DIGIT',
                'MP_NO_MP_WORD',
@@ -20,7 +9,7 @@ index c4beb34..765f051 100644
              ],
            },
          },
-@@ -793,8 +789,6 @@
+@@ -799,8 +797,6 @@
                'MPI_AMD64',
                'MP_ASSEMBLY_MULTIPLY',
                'NSS_USE_COMBA',
@@ -29,7 +18,7 @@ index c4beb34..765f051 100644
              ],
            },
          },
-@@ -806,7 +800,6 @@
+@@ -812,7 +808,6 @@
        }],
        [ '(OS=="win" or OS=="mac" or OS=="ios") and (target_arch=="arm64" or target_arch=="aarch64") and disable_arm_hw_aes==0', {
          'defines': [
@@ -37,7 +26,7 @@ index c4beb34..765f051 100644
          ],
        }],
        [ '(OS=="win" or OS=="mac" or OS=="ios") and (target_arch=="arm64" or target_arch=="aarch64") and disable_arm_hw_sha1==0', {
-@@ -872,8 +865,6 @@
+@@ -871,8 +866,6 @@
            }],
            [ 'target_arch=="x64"', {
              'defines': [
@@ -46,7 +35,7 @@ index c4beb34..765f051 100644
              ],
            }],
            [ 'target_arch=="ia32"', {
-@@ -901,7 +892,6 @@
+@@ -899,7 +892,6 @@
            }],
            [ 'disable_arm_hw_aes==0 and (target_arch=="arm" or target_arch=="arm64" or target_arch=="aarch64")', {
              'defines': [
@@ -54,11 +43,9 @@ index c4beb34..765f051 100644
              ],
            }],
            [ 'disable_arm_hw_sha1==0 and (target_arch=="arm" or target_arch=="arm64" or target_arch=="aarch64")', {
-diff --git a/nss/lib/freebl/unix_urandom.c b/nss/lib/freebl/unix_urandom.c
-index 73006cd..367f546 100644
 --- a/nss/lib/freebl/unix_urandom.c
 +++ b/nss/lib/freebl/unix_urandom.c
-@@ -33,7 +33,7 @@ RNG_SystemRNG(void *dest, size_t maxLen)
+@@ -33,7 +33,7 @@
      size_t fileBytes = 0;
      unsigned char *buffer = dest;
  

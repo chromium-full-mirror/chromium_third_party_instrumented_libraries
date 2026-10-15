@@ -50,8 +50,8 @@ group("locally_built") {
     ":libgcc-s1",
     ":libgcrypt20",
     ":libgdk-pixbuf-2.0-0",
-    ":libgdk-pixbuf2.0-0",
-    ":libglib2.0-0",
+    ":libgdk-pixbuf-xlib-2.0-0",
+    ":libglib2.0-0t64",
     ":libgnutls30t64",
     ":libgpg-error0",
     ":libgtk-3-0t64",
@@ -65,7 +65,7 @@ group("locally_built") {
     ":libnspr4",
     ":libp11-kit0",
     ":libpci3",
-    ":libpcre3",
+    ":libpcre2-8-0",
     ":libpixman-1-0",
     ":libpng16-16t64",
     ":librtmp1",
@@ -324,16 +324,16 @@ instrumented_library("guest-oslogin") {
 }
 
 instrumented_library("harfbuzz") {
+  build_method = "meson"
   package_cflags = [ "-Wno-c++11-narrowing" ]
   extra_configure_flags = [
-    "--disable-static",
-
     # From debian/rules.
-    "--with-graphite2=yes",
-    "--with-gobject",
+    "-Dgraphite2=enabled",
+    "-Dgobject=enabled",
 
-    # See above.
-    "--disable-introspection",
+    "-Ddocs=disabled",
+    "-Dintrospection=disabled",
+    "-Dtests=disabled",
   ]
 }
 
@@ -417,21 +417,25 @@ instrumented_library("libcurl3t64-gnutls") {
 }
 
 instrumented_library("libdbus-1-3") {
+  build_method = "meson"
   extra_configure_flags = [
-    "--disable-static",
-
     # From debian/rules.
-    "--disable-libaudit",
-    "--enable-apparmor",
-    "--enable-systemd",
-    "--libexecdir=/lib/dbus-1.0",
-    "--with-systemdsystemunitdir=/lib/systemd/system",
-    "--disable-tests",
-    "--exec-prefix=/",
+    "--libexecdir=lib/dbus-1.0",
+    "-Dapparmor=enabled",
+    "-Dlibaudit=disabled",
+    "-Dsystemd=enabled",
+    "-Dsystemd_system_unitdir=/lib/systemd/system",
+    "-Dsystem_socket=/run/dbus/system_bus_socket",
 
-    # From dh_auto_configure.
-    "--prefix=/usr",
-    "--localstatedir=/var",
+    "-Ddoxygen_docs=disabled",
+    "-Dducktype_docs=disabled",
+    "-Dmodular_tests=disabled",
+    "-Dxml_docs=disabled",
+
+    # Only the library is needed. Installing the daemon's setuid launch helper
+    # tries to chown it to the messagebus group, which fails in the chroot.
+    "-Dmessage_bus=false",
+    "-Dtools=false",
   ]
 }
 
@@ -487,13 +491,17 @@ instrumented_library("libffi8") {
 }
 
 instrumented_library("libfontconfig1") {
+  build_method = "meson"
   extra_configure_flags = [
-    "--disable-docs",
-    "--sysconfdir=/etc/",
-    "--disable-static",
+    "--sysconfdir=/etc",
+    "-Ddoc=disabled",
+    "-Dtests=disabled",
+
+    # Building the cache runs an instrumented fc-cache, which isn't needed.
+    "-Dcache-build=disabled",
 
     # From debian/rules.
-    "--with-add-fonts=/usr/X11R6/lib/X11/fonts,/usr/local/share/fonts",
+    "-Dadditional-fonts-dirs=/usr/X11R6/lib/X11/fonts,/usr/local/share/fonts",
   ]
 }
 
@@ -530,11 +538,11 @@ instrumented_library("libgdk-pixbuf-2.0-0") {
   patches = [ "patches/libgdk-pixbuf.diff" ]
 }
 
-instrumented_library("libgdk-pixbuf2.0-0") {
+instrumented_library("libgdk-pixbuf-xlib-2.0-0") {
   build_method = "meson"
 }
 
-instrumented_library("libglib2.0-0") {
+instrumented_library("libglib2.0-0t64") {
   build_method = "meson"
   extra_configure_flags = [
     "-Dgtk_doc=false",
@@ -555,6 +563,10 @@ instrumented_library("libglib2.0-0") {
 }
 
 instrumented_library("libgnutls30t64") {
+  # The generated autotools files are out of date with respect to the installed
+  # automake.
+  pre_build = "scripts/pre-build/autoreconf.sh"
+
   extra_configure_flags = [
     # from debian/rules.
     "--enable-ld-version-script",
@@ -711,27 +723,28 @@ instrumented_library("libpci3") {
   build_method = "custom_libpci3"
 }
 
-instrumented_library("libpcre3") {
+instrumented_library("libpcre2-8-0") {
   extra_configure_flags = [
-    "--enable-utf8",
-    "--enable-unicode-properties",
     "--disable-static",
+
+    # JIT-compiled code isn't instrumented, so MSan would report false
+    # positives.
+    "--disable-jit",
   ]
-  pre_build = "scripts/pre-build/dh_autoreconf.sh"
 }
 
 instrumented_library("libpixman-1-0") {
+  build_method = "meson"
   extra_configure_flags = [
-    "--disable-static",
-
     # From debian/rules.
-    "--disable-gtk",
-    "--disable-silent-rules",
+    "-Dgtk=disabled",
+
+    "-Ddemos=disabled",
+    "-Dtests=disabled",
 
     # Avoid a clang issue. http://crbug.com/449183
-    "--disable-mmx",
+    "-Dmmx=disabled",
   ]
-  patches = [ "patches/libpixman-1-0.diff" ]
 }
 
 instrumented_library("libpng16-16t64") {
@@ -901,8 +914,6 @@ instrumented_library("libxtst6") {
 instrumented_library("nss") {
   patches = [
     "patches/nss.diff",
-    "patches/nss.2.diff",
-    "patches/nss.3.diff",
     "patches/nss.4.diff",
     "patches/nss.6.diff",
   ]
@@ -911,6 +922,7 @@ instrumented_library("nss") {
 
 instrumented_library("opensc-pkcs11") {
   build_method = "debian"
+  pre_build = "scripts/pre-build/opensc-pkcs11.sh"
 }
 
 instrumented_library("pango1.0") {
@@ -920,8 +932,6 @@ instrumented_library("pango1.0") {
     "-Dintrospection=disabled",
   ]
   patches = [
-    "patches/pango1.0.diff",
-
     # Remove a variable length function with many arguments since
     # otherwise a false positive will be reported.
     "patches/pango1.0.2.diff",
@@ -946,6 +956,6 @@ instrumented_library("libudev1") {
 }
 
 instrumented_library("zlib1g") {
-  make_targets = [ "libz.so.1.3" ]
+  make_targets = [ "libz.so.1.3.1" ]
   patches = [ "patches/zlib1g.diff" ]
 }

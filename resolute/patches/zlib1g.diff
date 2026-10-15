@@ -1,8 +1,6 @@
-diff --git a/zlib.map b/zlib.map
-index b330b60..9600ca1 100644
 --- a/zlib.map
 +++ b/zlib.map
-@@ -15,7 +15,6 @@ ZLIB_1.2.0 {
+@@ -15,7 +15,6 @@
      zcfree;
      z_errmsg;
      gz_error;
