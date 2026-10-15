@@ -29,6 +29,20 @@ deps = {
               'size_bytes': 499074429,
               'generation': 1787961441197649,
           },
+          # msan-chained-origins-resolute-lib
+          {
+              'object_name': '230ca366b406a31f29ab2e8e798c0d4c36108b40e134bb3f2b4c5b7b632ecdf7',
+              'sha256sum': '230ca366b406a31f29ab2e8e798c0d4c36108b40e134bb3f2b4c5b7b632ecdf7',
+              'size_bytes': 584327142,
+              'generation': 1792098025283214,
+          },
+          # msan-no-origins-resolute-lib
+          {
+              'object_name': 'df9ac72b96449bf0b6cb1b5a4477ce873e77c29387052f2db427ec7a663ef983',
+              'sha256sum': 'df9ac72b96449bf0b6cb1b5a4477ce873e77c29387052f2db427ec7a663ef983',
+              'size_bytes': 560890161,
+              'generation': 1792098033635966,
+          },
       ],
   },
 }

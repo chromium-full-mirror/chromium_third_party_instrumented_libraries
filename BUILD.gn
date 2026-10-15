@@ -6,7 +6,7 @@ import("//build/config/sanitizers/sanitizers.gni")
 import("//build/symlink.gni")
 
 declare_args() {
-  instrumented_libraries_release = "noble"
+  instrumented_libraries_release = "resolute"
 }
 
 if (prebuilt_instrumented_libraries_available) {
