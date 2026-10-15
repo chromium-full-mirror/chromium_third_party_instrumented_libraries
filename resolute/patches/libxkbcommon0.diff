@@ -1,0 +1,13 @@
+diff --git a/src/context.c b/src/context.c
+index bcec16c..bb0999d 100644
+--- a/src/context.c
++++ b/src/context.c
+@@ -97,7 +97,7 @@ XKB_EXPORT int
+ xkb_context_include_path_append_default(struct xkb_context *ctx)
+ {
+     const char *home, *xdg, *root, *extra;
+-    char *user_path;
++    char *user_path = NULL;
+     int ret = 0;
+ 
+     home = xkb_context_getenv(ctx, "HOME");

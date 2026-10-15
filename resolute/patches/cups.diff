@@ -1,0 +1,13 @@
+diff --git a/cups/language.c b/cups/language.c
+index 96e8283..2d0a5ee 100644
+--- a/cups/language.c
++++ b/cups/language.c
+@@ -447,7 +447,7 @@ cupsLangGet(const char *language)	/* I - Language or locale */
+ {
+   int			i;		/* Looping var */
+ #ifndef __APPLE__
+-  char			locale[255];	/* Copy of locale name */
++  char			locale[255] = {0};	/* Copy of locale name */
+ #endif /* !__APPLE__ */
+   char			langname[16],	/* Requested language name */
+ 			country[16],	/* Country code */

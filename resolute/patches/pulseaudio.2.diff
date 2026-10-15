@@ -1,0 +1,22 @@
+diff --git a/src/pulsecore/core-util.c b/src/pulsecore/core-util.c
+index c383a61..de570d8 100644
+--- a/src/pulsecore/core-util.c
++++ b/src/pulsecore/core-util.c
+@@ -1024,7 +1024,7 @@ const char *pa_sig2str(int sig) {
+         goto fail;
+ #endif
+ 
+-#ifdef HAVE_SIG2STR
++#if 0
+     {
+         char buf[SIG2STR_MAX];
+ 
+@@ -3710,7 +3710,7 @@ int pa_accept_cloexec(int sockfd, struct sockaddr *addr, socklen_t *addrlen) {
+ 
+ #endif
+ 
+-#ifdef HAVE_PACCEPT
++#if 0
+     if ((fd = paccept(sockfd, addr, addrlen, NULL, SOCK_CLOEXEC)) >= 0)
+         goto finish;
+ #endif

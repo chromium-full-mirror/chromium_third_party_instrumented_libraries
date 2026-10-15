@@ -1,0 +1,14 @@
+diff --git a/debian/rules b/debian/rules
+index b952c0d..9681c1a 100755
+--- a/debian/rules
++++ b/debian/rules
+@@ -21,7 +21,8 @@ override_dh_auto_configure:
+ 		--with-packager-version=$(DEB_VERSION) \
+ 		--with-packager-bug-reports=https://bugs.debian.org/ \
+ 		--disable-silent-rules \
+-		--disable-java
++		--disable-java \
++		--disable-valgrind-tests
+ 
+ override_dh_install:
+ 	dh_install

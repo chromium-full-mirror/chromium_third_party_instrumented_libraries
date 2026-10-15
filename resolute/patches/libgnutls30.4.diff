@@ -1,0 +1,17 @@
+diff --git a/lib/nettle/init.c b/lib/nettle/init.c
+index 6a34627..d1fa18d 100644
+--- a/lib/nettle/init.c
++++ b/lib/nettle/init.c
+@@ -39,9 +39,9 @@ static void (*freefunc)(void *, size_t);
+ 
+ int gnutls_crypto_init(void)
+ {
+-	void *(*defallocfunc)(size_t);
+-	void *(*defreallocfunc)(void *, size_t, size_t);
+-	void (*deffreefunc)(void *, size_t);
++	void *(*defallocfunc)(size_t) = NULL;
++	void *(*defreallocfunc)(void *, size_t, size_t) = NULL;
++	void (*deffreefunc)(void *, size_t) = NULL;
+ 
+ 	/* Check if non-default allocators are being used.
+ 	 * Some applications like guile override GMP allocators

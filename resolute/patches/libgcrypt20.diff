@@ -1,0 +1,13 @@
+diff --git a/random/rndgetentropy.c b/random/rndgetentropy.c
+index a6f3c4a..740092d 100644
+--- a/random/rndgetentropy.c
++++ b/random/rndgetentropy.c
+@@ -42,7 +42,7 @@ _gcry_rndgetentropy_gather_random (void (*add)(const void*, size_t,
+                                    enum random_origins origin,
+                                    size_t length, int level)
+ {
+-  byte buffer[256];
++  byte buffer[256] = {0};
+ 
+   if (!add)
+     {

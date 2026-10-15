@@ -1,0 +1,12 @@
+diff --git a/ssl/ssl_ciph.c b/ssl/ssl_ciph.c
+index 9e32417..e233052 100644
+--- a/ssl/ssl_ciph.c
++++ b/ssl/ssl_ciph.c
+@@ -1308,6 +1308,7 @@ static int ciphersuite_cb(const char *elem, int len, void *arg)
+     const SSL_CIPHER *cipher;
+     /* Arbitrary sized temp buffer for the cipher name. Should be big enough */
+     char name[80];
++    memset(name, 0, sizeof(name));
+ 
+     if (len > (int)(sizeof(name) - 1))
+         /* Anyway return 1 so we can parse rest of the list */

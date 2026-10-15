@@ -1,0 +1,12 @@
+diff --git a/cups/ppd-mark.c b/cups/ppd-mark.c
+index 25797b3..5922718 100644
+--- a/cups/ppd-mark.c
++++ b/cups/ppd-mark.c
+@@ -435,6 +435,7 @@ ppdFindOption(ppd_file_t *ppd,		/* I - PPD file data */
+     */
+ 
+     ppd_option_t	key;		/* Option search key */
++    memset(&key, 0, sizeof(key));
+ 
+ 
+     strlcpy(key.keyword, option, sizeof(key.keyword));
