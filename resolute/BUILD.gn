@@ -811,6 +811,9 @@ instrumented_library("libssl3t64") {
   patches = [
     "patches/libssl3t64.diff",
     "patches/libssl3t64.2.diff",
+
+    # Disable assembly, since MSan can't see stores done by it.
+    "patches/libssl3t64.3.diff",
   ]
 }
 

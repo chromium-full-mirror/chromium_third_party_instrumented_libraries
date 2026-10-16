@@ -330,6 +330,12 @@ class DebianBuilder(InstrumentedPackageBuilder):
         self._build_env["DEB_CFLAGS_APPEND"] = " ".join(self._cflags)
         self._build_env["DEB_CXXFLAGS_APPEND"] = " ".join(self._cflags)
         self._build_env["DEB_LDFLAGS_APPEND"] = " ".join(self._ldflags)
+        # dpkg-buildflags adds -D_FORTIFY_SOURCE to CPPFLAGS (some packages,
+        # e.g. openssl, force hardening=+all), and some build systems pass
+        # CPPFLAGS after CFLAGS, which would override -U_FORTIFY_SOURCE there.
+        # MSan doesn't intercept the fortified libc functions (e.g.
+        # __memcpy_chk), so make sure fortify stays disabled.
+        self._build_env["DEB_CPPFLAGS_APPEND"] = "-U_FORTIFY_SOURCE"
 
     def build_and_install(self):
         self.build_debian_packages()
