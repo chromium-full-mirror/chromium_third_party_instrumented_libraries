@@ -92,6 +92,7 @@ group("locally_built") {
     ":libxkbcommon0",
     ":libxrandr2",
     ":libxrender1",
+    ":libxres1",
     ":libxss1",
     ":libxtst6",
     ":nss",
@@ -319,8 +320,15 @@ instrumented_library("guest-oslogin") {
   git_url = "https://github.com/GoogleCloudPlatform/guest-oslogin.git"
   git_revision = "f59b7f38c21b4794282ddf12fd4a6083cd99e1e4"
 
-  # Work around an issue where header files are passed to the linker.
-  patches = [ "patches/guest-oslogin.diff" ]
+  patches = [
+    # Work around an issue where header files are passed to the linker.
+    "patches/guest-oslogin.diff",
+
+    # Link libstdc++ statically, since resolute's is newer than the one on
+    # older distros, such as the Ubuntu 22.04 bots.
+    # TODO(crbug.com/574207511): Remove once the bots run Ubuntu 24.04+.
+    "patches/guest-oslogin.2.diff",
+  ]
 }
 
 instrumented_library("harfbuzz") {
@@ -533,6 +541,17 @@ instrumented_library("libgdk-pixbuf-2.0-0") {
     "-Dintrospection=disabled",
     "-Dman=false",
     "-Dtests=false",
+
+    # Glycin isn't available on older distros, such as the Ubuntu 22.04 bots.
+    # Use the built-in loaders instead, without any that depend on libraries
+    # that aren't instrumented.
+    # TODO(crbug.com/574207511): Remove once the bots run Ubuntu 26.04+.
+    "-Dglycin=disabled",
+    "-Dandroid=disabled",
+    "-Dgif=enabled",
+    "-Djpeg=enabled",
+    "-Dpng=enabled",
+    "-Dtiff=disabled",
   ]
 
   patches = [ "patches/libgdk-pixbuf.diff" ]
@@ -547,6 +566,12 @@ instrumented_library("libglib2.0-0t64") {
   extra_configure_flags = [
     "-Dgtk_doc=false",
     "-Dman=false",
+
+    # libmount isn't instrumented, and resolute's needs symbols that aren't
+    # available on older distros, such as the Ubuntu 22.04 bots. GIO falls back
+    # to parsing the mount tables itself.
+    # TODO(crbug.com/574207511): Remove once the bots run Ubuntu 26.04+.
+    "-Dlibmount=disabled",
   ]
   msan_ignorelist = "ignorelists/msan/libglib2.0-0.txt"
   pre_build = "scripts/pre-build/libglib2.0-0.sh"
@@ -844,6 +869,10 @@ instrumented_library("libxcb1") {
       ] ]
 }
 
+instrumented_library("libxres1") {
+  extra_configure_flags = [ "--disable-static" ]
+}
+
 instrumented_library("libxcomposite1") {
   extra_configure_flags = [ "--disable-static" ]
 }
@@ -889,6 +918,10 @@ instrumented_library("libxinerama1") {
 
 instrumented_library("libxkbcommon0") {
   build_method = "meson"
+
+  # libxkbregistry isn't used, and depends on a libxml2 that isn't available
+  # on older distros, such as the Ubuntu 22.04 bots.
+  extra_configure_flags = [ "-Denable-xkbregistry=false" ]
   patches = [ "patches/libxkbcommon0.diff" ]
 }
 

@@ -31,17 +31,17 @@ deps = {
           },
           # msan-chained-origins-resolute-lib
           {
-              'object_name': '230ca366b406a31f29ab2e8e798c0d4c36108b40e134bb3f2b4c5b7b632ecdf7',
-              'sha256sum': '230ca366b406a31f29ab2e8e798c0d4c36108b40e134bb3f2b4c5b7b632ecdf7',
-              'size_bytes': 584327142,
-              'generation': 1792098025283214,
+              'object_name': 'd4de19a9bc3d2979f09f74ce23bb4182fd803f8fd02e73a7c7eb4b1c5519c4e0',
+              'sha256sum': 'd4de19a9bc3d2979f09f74ce23bb4182fd803f8fd02e73a7c7eb4b1c5519c4e0',
+              'size_bytes': 585844795,
+              'generation': 1792111736710902,
           },
           # msan-no-origins-resolute-lib
           {
-              'object_name': 'df9ac72b96449bf0b6cb1b5a4477ce873e77c29387052f2db427ec7a663ef983',
-              'sha256sum': 'df9ac72b96449bf0b6cb1b5a4477ce873e77c29387052f2db427ec7a663ef983',
-              'size_bytes': 560890161,
-              'generation': 1792098033635966,
+              'object_name': 'ce02284af7031e544a601bf98f2ad1c1af94374c9fd370513029bd9b11715ddb',
+              'sha256sum': 'ce02284af7031e544a601bf98f2ad1c1af94374c9fd370513029bd9b11715ddb',
+              'size_bytes': 562400266,
+              'generation': 1792111746631983,
           },
       ],
   },

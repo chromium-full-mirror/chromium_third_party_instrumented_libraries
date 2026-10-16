@@ -64,6 +64,7 @@ libxinerama \
 libxkbcommon \
 libxrandr \
 libxrender \
+libxres \
 libxss \
 libxtst \
 nettle \
