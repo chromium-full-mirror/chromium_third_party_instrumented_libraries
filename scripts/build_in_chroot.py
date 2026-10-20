@@ -71,28 +71,13 @@ SNAPSHOT_URL = f"https://snapshot.ubuntu.com/ubuntu/{SNAPSHOT}/"
 ARCHIVE_URL = "http://archive.ubuntu.com/ubuntu/"
 
 RELEASES = {
-    "noble": {
-        "base_tarball_url":
-        "https://cdimage.ubuntu.com/ubuntu-base/releases/24.04/release/"
-        "ubuntu-base-24.04.3-base-amd64.tar.gz",
-        "base_tarball_sha256":
-        "6bc2cde3930ad088b3bb46fa45279e96d25bc3810f209850ecbe4722711874f9",
-        # Package name -> version to pin.
-        "apt_pins": {
-            # tar >= 1.35+dfsg-3ubuntu0.3 (the CVE-2026-5704 fix) fails to
-            # create subdirectories when run under proot, which breaks
-            # dpkg-source. Keep the release version. It only extracts
-            # apt-verified source packages. Pinned in both modes so the chroot
-            # contents don't depend on the mode.
-            "tar": "1.35+dfsg-3build1",
-        },
-    },
     "resolute": {
         "base_tarball_url":
         "https://cdimage.ubuntu.com/ubuntu-base/releases/26.04/release/"
         "ubuntu-base-26.04.1-base-amd64.tar.gz",
         "base_tarball_sha256":
         "a496a960472ce474a59590b8987d3a1135d3cbef1991f3b1abe8cacfea8bf85a",
+        # Package name -> version to pin.
         "apt_pins": {},
     },
 }
@@ -690,7 +675,7 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--release",
                         choices=sorted(RELEASES),
-                        default="noble",
+                        default="resolute",
                         help="Ubuntu release to build the libraries for")
     parser.add_argument(
         "--mode",
