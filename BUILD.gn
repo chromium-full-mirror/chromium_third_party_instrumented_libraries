@@ -33,14 +33,28 @@ if (prebuilt_instrumented_libraries_available) {
 
   # When prebuilt instrumented libraries are used, we need to tell those built
   # binaries need to load the following libraries via BUILD.gn configs so that
-  # siso uploads these files to remote workers.
+  # siso uploads these files to remote workers. For libraries whose SONAME
+  # entries are symlinks (e.g. glib, ffi, pcre2), both the symlinks and their
+  # target files must be listed so Siso uploads both.
   config("msan_runtime_libs") {
     inputs = [
       "//$root_build_dir/third_party/instrumented_libs/binaries/$archive/ld/ld-linux-x86-64.so.2",
       "binaries/$archive/lib/libc.so.6",
       "binaries/$archive/lib/libdl.so.2",
+      "binaries/$archive/lib/libffi.so.8",
+      "binaries/$archive/lib/libffi.so.8.2.0",
       "binaries/$archive/lib/libgcc_s.so.1",
+      "binaries/$archive/lib/libglib-2.0.so.0",
+      "binaries/$archive/lib/libglib-2.0.so.0.8800.0",
+      "binaries/$archive/lib/libgmodule-2.0.so.0",
+      "binaries/$archive/lib/libgmodule-2.0.so.0.8800.0",
+      "binaries/$archive/lib/libgobject-2.0.so.0",
+      "binaries/$archive/lib/libgobject-2.0.so.0.8800.0",
+      "binaries/$archive/lib/libgthread-2.0.so.0",
+      "binaries/$archive/lib/libgthread-2.0.so.0.8800.0",
       "binaries/$archive/lib/libm.so.6",
+      "binaries/$archive/lib/libpcre2-8.so.0",
+      "binaries/$archive/lib/libpcre2-8.so.0.14.0",
       "binaries/$archive/lib/libpthread.so.0",
       "binaries/$archive/lib/libresolv.so.2",
       "binaries/$archive/lib/librt.so.1",
