@@ -37,6 +37,7 @@ jasper-initramfs \
 libappindicator \
 libc6 \
 libcap2 \
+libdatrie \
 libdbusmenu \
 libffi \
 libgcc-s1 \
@@ -49,6 +50,7 @@ libmicrohttpd \
 libnghttp2-14 \
 liboss4-salsa-asound2 \
 libpng1.6 \
+libthai \
 libunity \
 libx11 \
 libxau \

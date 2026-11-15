@@ -17,17 +17,17 @@ deps = {
       'objects': [
           # msan-chained-origins-resolute-lib
           {
-              'object_name': '3d9c1a1614a2d3d8bdedb7495763f1b6b35db36525d0f8e30afc2e40a18c715b',
-              'sha256sum': '3d9c1a1614a2d3d8bdedb7495763f1b6b35db36525d0f8e30afc2e40a18c715b',
-              'size_bytes': 585476778,
-              'generation': 1792166825262546,
+              'object_name': '182c261d2c03b8b973929b8acbadaeb838883245f69fbaa07eee011a902a2fa5',
+              'sha256sum': '182c261d2c03b8b973929b8acbadaeb838883245f69fbaa07eee011a902a2fa5',
+              'size_bytes': 586254578,
+              'generation': 1794707656092681,
           },
           # msan-no-origins-resolute-lib
           {
-              'object_name': '07c3b192849e17de23be013d9d5adb2ee9d2c9f2b876a0703660e4536c66ad85',
-              'sha256sum': '07c3b192849e17de23be013d9d5adb2ee9d2c9f2b876a0703660e4536c66ad85',
-              'size_bytes': 561968922,
-              'generation': 1792166836644676,
+              'object_name': '03a9297e9e14b3dfd0f8da44ef760c0e6319727656b4062e212be7debaaea297',
+              'sha256sum': '03a9297e9e14b3dfd0f8da44ef760c0e6319727656b4062e212be7debaaea297',
+              'size_bytes': 562614137,
+              'generation': 1794707666528524,
           },
       ],
   },
